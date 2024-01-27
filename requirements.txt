@@ -1,0 +1,9 @@
+streamlit
+streamlit_extras
+langchain
+langchain_experimental
+langchain_openai
+openai
+python.dotenv
+tabulate
+fuzzywuzzy[speedup]
