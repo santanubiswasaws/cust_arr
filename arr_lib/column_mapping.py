@@ -16,6 +16,7 @@ def map_columns(df, column_mapping_df):
     - pd.DataFrame: DataFrame with columns mapped according to the provided mapping.
     """
 
+
     column_mapping = column_mapping_df.set_index('columnHeaders')['columnNames'].to_dict()
 
     new_df = pd.DataFrame({key: df[value].tolist() for key, value in column_mapping.items()})

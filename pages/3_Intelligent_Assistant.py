@@ -30,10 +30,6 @@ st.header("Intelligent Assistant")
 st.markdown("<br>", unsafe_allow_html=True)
 
 
-st.markdown(BUTTON_STYLE, unsafe_allow_html=True)
-st.markdown(MARKDOWN_STYLES, unsafe_allow_html=True)
-st.markdown(GLOBAL_STYLING, unsafe_allow_html=True)
-
 load_dotenv()
 
 # Load the OpenAI API key from the environment variable
@@ -313,3 +309,6 @@ def append_to_file(filename, question, answer):
 
 
 
+st.markdown(BUTTON_STYLE, unsafe_allow_html=True)
+st.markdown(MARKDOWN_STYLES, unsafe_allow_html=True)
+st.markdown(GLOBAL_STYLING, unsafe_allow_html=True)

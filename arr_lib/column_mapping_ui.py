@@ -28,7 +28,6 @@ def perform_column_mapping(predefined_columns, predefined_date_formats, input_df
 
     # Create a DataFrame
     df = pd.DataFrame({'columnHeaders': predefined_columns, 'columnNames': 'double click to select .. ', 'dateFormat': 'pick appropriate date format'})
-    print(df)
 
     # populate the df from session if exists 
 
