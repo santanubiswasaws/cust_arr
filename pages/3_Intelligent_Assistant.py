@@ -263,7 +263,7 @@ with st.expander("Show/Hide Full Query History"):
     st.markdown("<br>", unsafe_allow_html=True)
 
     # Clear chat history button
-    if st.button("Clear Chat History"):
+    if st.button("Clear Chat History "):
         st.session_state.conversation_history = []
         st.experimental_rerun()
     
