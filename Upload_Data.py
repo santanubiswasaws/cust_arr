@@ -139,8 +139,8 @@ def main():
         if (not mapped_df.empty) and st.session_state.column_mapping_status:
 
             # Display mapped data 
-            with st.expander('Show/Hide overlapping contract', expanded=True):
-                st.subheader("Overlapping contract :", divider='green') 
+            with st.expander('Show/Hide overlapping contracts', expanded=True):
+                st.subheader("Overlapping contracts :", divider='green') 
                 overlapiing_contracts_df = find_overlapiing_contracts(mapped_df)
                 st.session_state.overlapiing_contracts_df = overlapiing_contracts_df
                 st.dataframe (overlapiing_contracts_df)
