@@ -855,3 +855,50 @@ def apply_overrides(input_original_df, input_override_df ):
     transposed_result_df = sort_by_first_month_of_sales(transposed_result_df)
 
     return transposed_result_df
+
+
+
+@st.cache_data
+def find_overlapiing_contracts(input_df):
+    """
+    Compares the scratchpad and override dfs - and create a recon_df with the difference in values for a given customer and month
+
+    Parameters:
+    - scratch_pad_df (pd.DataFrame): scratch pad df 
+    - override_df  (pd.DataFrame): override df 
+
+    Returns:
+    - pd.DataFrame: for each customer as row and months as columns, it creates the differnce between the tow input dfs 
+    """
+
+    df = input_df.copy()
+
+    print(df)
+
+    # Sort by customerId and contractStartDate
+    df_sorted = df.sort_values(by=['customerId', 'contractStartDate'])
+
+    # Function to mark overlapping contracts
+    def mark_overlaps(group):
+        group['prev_contractEndDate'] = group['contractEndDate'].shift()
+        group['overlap'] = group['contractStartDate'] < group['prev_contractEndDate']
+        return group
+
+    # Apply the function to each group
+    df_marked = df_sorted.groupby('customerId').apply(mark_overlaps)
+
+    # Filter to get only rows that are marked as overlapping or follow an overlapping row
+    overlapping_contracts_df = df_marked[
+        (df_marked['overlap']) | 
+        (df_marked['overlap'].shift(-1) & (df_marked['customerId'] == df_marked['customerId'].shift(-1)))
+    ]
+
+    # Drop auxiliary columns
+    overlapping_contracts_df = overlapping_contracts_df.drop(columns=['prev_contractEndDate', 'overlap'])
+
+    overlapping_contracts_df.reset_index(drop=True, inplace=True)
+
+    # Print the overlapping contracts
+    print("\nOverlapping Contracts:")
+    print(overlapping_contracts_df)
+    return overlapping_contracts_df

@@ -89,14 +89,14 @@ def perform_column_filtering(input_df):
     with col2:
         for col in columns_to_filter:
             if is_numeric_column(df, col):
-                st.markdown(f"###### Numeric Range for {col}")
+                st.markdown(f"###### {col}")
                 min_val, max_val = df[col].min(), df[col].max()
                 num_range = st.slider(f"Select range for {col}", min_val, max_val, (min_val, max_val), key=f"{col}_num_range")
                 numeric_filters[col] = num_range
                 st.markdown(f"Current range: {num_range[0]:,.2f} - {num_range[1]:,.2f}")
             elif col in date_columns:
                 min_date, max_date = get_date_range(df, col)
-                st.markdown(f"###### Date Range for {col}")
+                st.markdown(f"###### {col}")
                 col_from, col_to = st.columns(2)
                 with col_from:
                     from_date = st.date_input(f"From date for {col}", value=min_date, key=f"{col}_from_date")
@@ -104,7 +104,7 @@ def perform_column_filtering(input_df):
                     to_date = st.date_input(f"To date for {col}", value=max_date, key=f"{col}_to_date")
                 date_filters[col] = (from_date, to_date)
             else:
-                st.markdown(f"###### Filter for {col}")
+                st.markdown(f"###### {col}")
                 col_inc, col_exc = st.columns(2)
                 with col_inc:
                     selected_values_include = st.multiselect(f"Include {col}", df[col].dropna().unique(), key=f"{col}_inc")
@@ -119,7 +119,7 @@ def perform_column_filtering(input_df):
 
 
 
-    if st.button(" Filter Data "):
+    if st.button(" Filter Uploaded Data "):
         filtered_df = filter_dataframe(df, column_filters, date_filters, exclusion_filters, numeric_filters)
         filtering_status = True 
         st.session_state.column_filtering_status = filtering_status
