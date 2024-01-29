@@ -48,7 +48,6 @@ def validate_input_data(input_df):
     df['endDateFormat'] = df['endDateFormat'].map(PREDEFINED_DATE_FORMAT_MAP)
 
 
-
     # Use pd.to_datetime to validate and convert the 'startDate' column
     try:
         df['contractStartDate'] = df.apply(lambda row: pd.to_datetime(row['contractStartDate'], format=row['startDateFormat'], errors='coerce'), axis=1)
@@ -69,6 +68,11 @@ def validate_input_data(input_df):
         
     # Calculate the contract duration in months
     df['contractDuration'] = (df['contractEndDate'] - df['contractStartDate']).dt.days 
+
+
+    # add an row_id column for reference during overlap override 
+
+    df['rowId']  = df.index
 
     # Validate contract duration
     try:
@@ -107,3 +111,45 @@ def validate_mapping(column_names, predefined_date_formats, df):
         return False
 
     return True
+
+
+def convert_contract_dates_to_str(input_df):
+    """
+    converts the dates to string 
+    """
+    df= input_df.copy()
+
+    # Use pd.to_datetime to validate and convert the 'startDate' column
+    try:
+
+        df['contractStartDate'] = df.apply(
+            lambda row: row['contractStartDate'].strftime(row['startDateFormat']), axis=1)
+       
+        df['contractEndDate'] = df.apply(
+            lambda row: row['contractEndDate'].strftime(row['endDateFormat']), axis=1)
+        
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
+    return df
+
+def convert_contract_dates_to_date(input_df):
+    """
+    converts the string dates to date 
+    """
+    df = input_df.copy()
+
+    # Use pd.to_datetime to convert the 'contractStartDate' and 'contractEndDate' columns back to datetime
+    try:
+        df['contractStartDate'] = df.apply(
+            lambda row: pd.to_datetime(row['contractStartDate'], format=row['startDateFormat']), axis=1
+        )
+        df['contractEndDate'] = df.apply(
+            lambda row: pd.to_datetime(row['contractEndDate'], format=row['endDateFormat']), axis=1
+        )
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        # Handle the exception or return the original DataFrame depending on your requirements
+
+    return df
+

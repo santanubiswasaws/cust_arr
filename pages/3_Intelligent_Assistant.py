@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import altair as alt
 from datetime import datetime
+from streamlit_extras.app_logo import add_logo
 
 #from langchain.llms import OpenAI
 from openai import OpenAI 
@@ -29,6 +30,8 @@ llm_model=ah.llm_model
 st.header("Intelligent Assistant")
 st.markdown("<br>", unsafe_allow_html=True)
 
+# add app log 
+add_logo("ns_logo.png")
 
 load_dotenv()
 

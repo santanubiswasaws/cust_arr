@@ -25,6 +25,16 @@ ARR_DISPLAY_COLUMN_MAP = {
         "lastMonthRevenueLogo" : "Opening Period Customers",
         "newBusinessLogo" : "New Customers",
         "churnLogo" : "Churned Customer",
-        "monthlyRevenueLogo": "Closing Period Customers"
+        "monthlyRevenueLogo": "Closing Period Customers",
+        "acv" : "ACV",
+        "totalContractValue" : "TCV",
+        "outerYearsCV": "Outer Years CV", 
+        "customerId": "Customer Id", 
+        "customerName": "Customer", 
+        "contractId": "Contract Number", 
+        "contractStartDate": "Contract Start Date", 
+        "contractEndDate": "Contract End Date", 
+        "contractMonths": "Contract Duration Months", 
+        "contractDuration": "Contract Duration Days"
 
 }

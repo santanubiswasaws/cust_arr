@@ -8,15 +8,19 @@ from arr_lib.arr_analysis import create_customer_and_aggregated_metrics
 from arr_lib.arr_analysis import reconcile_overrides
 from arr_lib.arr_analysis import highlight_positive_negative_cells, decorate_logo_metrics_df
 from arr_lib.arr_analysis import apply_overrides
-from arr_lib.arr_analysis import stylize_metrics_df, rename_columns
+from arr_lib.arr_analysis import stylize_metrics_df, rename_columns, rename_contract_columns
 from arr_lib.column_mapping_ui import perform_column_mapping
 from arr_lib.styling import BUTTON_STYLE
 from arr_lib.styling import MARKDOWN_STYLES
 from arr_lib.styling import GLOBAL_STYLING
+from streamlit_extras.app_logo import add_logo
 
 #st.image('insight_logo.png', use_column_width=False)
-st.header("Analyze ARR Data")
+st.header("Analyze Customer MRR and ARR Data")
 st.markdown("<br>", unsafe_allow_html=True)
+
+# add app log 
+add_logo("ns_logo.png")
 
 
 if 'mapped_df' not in st.session_state: 
@@ -25,15 +29,25 @@ else:
     # copy uploaded ARR metrics from session 
     mapped_df = st.session_state.mapped_df.copy()
 
+if 'acv_df' not in st.session_state: 
+    acv_df = pd.DataFrame()
+else:
+    # copy uploaded ARR metrics from session 
+    acv_df = st.session_state.acv_df.copy()
+
+
 if (mapped_df.empty): 
     st.error('Please upload and map contract data')
     st.stop()
+
+if not acv_df.empty: 
+    mapped_df =  acv_df.copy()
+    st.session_state.mapped_df = acv_df.copy()
 
 # on_change callback for file upload 
 def clear_session_cb ():
     for key in st.session_state.keys():
         del st.session_state[key]
-
 
 
 # -------------------------------------------------------------------------------        
@@ -43,9 +57,11 @@ def clear_session_cb ():
 if (not mapped_df.empty) and st.session_state.column_mapping_status:
 
     # Display mapped data 
-    with st.expander('Show/Hide mapped data', expanded=True):
-        st.subheader("Mapped Data :", divider='green') 
-        st.dataframe(st.session_state.mapped_df, use_container_width=False)
+    with st.expander('Show/Hide contract data', expanded=True):
+        st.subheader("Contract Data :", divider='green') 
+
+        display_mapped_df = rename_contract_columns(st.session_state.mapped_df)
+        st.dataframe(display_mapped_df, use_container_width=False)
 
 st.markdown("<br><br>", unsafe_allow_html=True)
 

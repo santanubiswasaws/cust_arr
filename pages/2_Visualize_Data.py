@@ -4,6 +4,7 @@ import pandas as pd
 import altair as alt
 from pandas.tseries.offsets import MonthEnd
 from datetime import datetime, timedelta
+from streamlit_extras.app_logo import add_logo
 
 
 from arr_lib.styling import BUTTON_STYLE
@@ -16,6 +17,9 @@ import arr_lib.arr_charts as ac
 #st.image('insight_logo.png', use_column_width=False)
 st.header("Visualize ARR Data")
 st.markdown("<br>", unsafe_allow_html=True)
+
+# add app log 
+add_logo("ns_logo.png")
 
 
 if 'metrics_df' not in st.session_state: 

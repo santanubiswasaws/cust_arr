@@ -9,7 +9,8 @@ from arr_lib.arr_analysis import reconcile_overrides
 from arr_lib.arr_analysis import highlight_positive_negative_cells, decorate_logo_metrics_df
 from arr_lib.arr_analysis import apply_overrides
 from arr_lib.arr_analysis import stylize_metrics_df, rename_columns
-from arr_lib.arr_analysis import find_overlapiing_contracts
+from arr_lib.arr_analysis import find_overlapiing_contracts, override_dfs, create_acv_analysis, rename_contract_columns
+from arr_lib.arr_validations import convert_contract_dates_to_str
 from arr_lib.column_mapping_ui import perform_column_mapping
 from arr_lib.column_filtering_ui import perform_column_filtering
 from arr_lib.styling import BUTTON_STYLE
@@ -26,7 +27,7 @@ def clear_session_cb ():
 def main():
 
     st.set_page_config(page_title="ARR Analysis" , layout='wide')
-    #st.image('insight_logo.png', use_column_width=False)
+    #st.image('ns_logo.png', use_column_width=False)
     st.header("Analyze Annual Recurring Revnue (ARR)")
 
 
@@ -36,7 +37,7 @@ def main():
 
 
     # add app log 
-    # add_logo("insight2_logo.png")
+    add_logo("ns_logo.png")
     
     # Initialize file upload details 
     if 'uploaded_file' not in st.session_state:
@@ -74,19 +75,24 @@ def main():
         # initialize mapped_df
         if 'filtered_df' not in st.session_state:
                 st.session_state.filtered_df = pd.DataFrame()
+
         # # initialize validation status
         if 'column_filtering_status' not in st.session_state:
                 st.session_state.column_filtering_status = False
                 
         with st.expander("Show/Hide Column filtering", expanded=True): 
             st.subheader("Filter Data :", divider='green') 
-            filtered_df, filtering_status = perform_column_filtering(df)
+            filtered_df, column_filtering_status = perform_column_filtering(df)
+            # st.session_state.filtered_df = filtered_df
+            # st.session_state.column_filtering_status = column_filtering_status
 
         # -------------------------------------------------------------------------------
         # Step 2: Display filtered df
         # -------------------------------------------------------------------------------
         #            
         filtered_df = st.session_state.filtered_df
+        column_filtering_status = st.session_state.column_filtering_status
+
         if not filtered_df.empty: 
             with st.expander("Show/Hide Filtered data  ", expanded=True): 
                 st.subheader("Filtered Data :", divider='green') 
@@ -98,10 +104,13 @@ def main():
         # Step 3: Column Mapping and Validation Section 
         # -------------------------------------------------------------------------------
 
-        filtered_df = st.session_state.filtered_df
 
         if 'mapped_df' not in st.session_state:
             st.session_state.mapped_df = pd.DataFrame()
+
+        if 'raw_mapped_df' not in st.session_state:
+            st.session_state.raw_mapped_df = pd.DataFrame()
+
         # # initialize validation status
         if 'column_mapping_status' not in st.session_state:
                 st.session_state.column_mapping_status = False
@@ -115,6 +124,7 @@ def main():
                 st.session_state.mapped_df =  mapped_df
 
         mapped_df = st.session_state.mapped_df
+        raw_mapped_df = st.session_state.raw_mapped_df
 
         # -------------------------------------------------------------------------------        
         # Step 4: Display mapped uploaded data 
@@ -125,9 +135,10 @@ def main():
             # Display mapped data 
             with st.expander('Show/Hide mapped data', expanded=True):
                 st.subheader("Mapped Data :", divider='green') 
-                st.dataframe(st.session_state.mapped_df, use_container_width=False)
+                st.dataframe(st.session_state.raw_mapped_df, use_container_width=False)
 
             st.markdown("<br><br>", unsafe_allow_html=True)
+
 
         # -------------------------------------------------------------------------------        
         # Step 5: Overlapping contracts
@@ -136,25 +147,120 @@ def main():
         if 'overlapiing_contracts_df' not in st.session_state:
             st.session_state.overlapiing_contracts_df = pd.DataFrame()
 
+        if 'overlapping_contracts_queried' not in st.session_state:
+            st.session_state.overlapping_contracts_queried = False
+        # -------------------------------------------------------------------------------        
+        # Step 5a: Find overlapping contracts
+        # -------------------------------------------------------------------------------        
+
         if (not mapped_df.empty) and st.session_state.column_mapping_status:
 
-            # Display mapped data 
-            with st.expander('Show/Hide overlapping contracts', expanded=True):
-                st.subheader("Overlapping contracts :", divider='green') 
-                overlapiing_contracts_df = find_overlapiing_contracts(mapped_df)
-                st.session_state.overlapiing_contracts_df = overlapiing_contracts_df
-                st.dataframe (overlapiing_contracts_df)
+            st.subheader("Overlapping contracts :", divider='green') 
+            st.markdown("<br>", unsafe_allow_html=True)
+            
+            col1, col2 = st.columns (2)
+            with col1:
+                overlap_days_filter = st.slider('How many days overlap do you want to find?', 0, 90 , 30)
 
-            st.markdown("<br><br>", unsafe_allow_html=True)
+            if st.button(f"Find Contracts Overlapping {overlap_days_filter} days"):    
+                st.session_state.overlapping_contracts_queried = True           
+                overlapiing_contracts_df = find_overlapiing_contracts(mapped_df, overlap_days_filter)
+                st.session_state.overlapiing_contracts_df = overlapiing_contracts_df
+
+
+
+         # -------------------------------------------------------------------------------        
+        # Step 5b: Display overlapping Contracts
+        # -------------------------------------------------------------------------------                  
+        overlapiing_contracts_df = st.session_state.overlapiing_contracts_df
+
+        if 'edited_overlapping_contracts_df' not in st.session_state:
+            st.session_state.edited_overlapping_contracts_df = pd.DataFrame()
+
+        if 'apply_overlap_changes' not in st.session_state:
+            st.session_state.apply_overlap_changes = False
+
+        if st.session_state.overlapping_contracts_queried and st.session_state.column_mapping_status:
+
+            if not overlapiing_contracts_df.empty :
+                st.markdown("<br>", unsafe_allow_html=True)
+                st.markdown("###### Adjust overlapping contracts ")
+
+                # display_overlap_df = convert_contract_dates_to_str(overlapiing_contracts_df)
+
+                edited_overlapping_contracts_df = st.data_editor(overlapiing_contracts_df, 
+                                disabled = ('customerId', 'customerName', 'totalContractValue', 'startDateFormat', 'endDateFormat', 'rowId'), 
+                                key="edit_ovelapping_ctracts")
+
+                st.session_state.edited_overlapping_contracts_df = edited_overlapping_contracts_df
+                # st.markdown("<br><br>", unsafe_allow_html=True)
+
+                st.session_state.apply_overlap_changes = st.checkbox('Apply these changes to uploaded data: ', value = st.session_state.apply_overlap_changes)
+
+
+            else: 
+                st.markdown("<br>", unsafe_allow_html=True)
+                st.markdown("###### No overlapping contracts found !")
+
 
         # -------------------------------------------------------------------------------        
-        # Step 6: Navigate to Analyze Page
+        # Step 6: Generate ACV & Booking Details 
+        # -------------------------------------------------------------------------------
+
+        if 'acv_df' not in st.session_state:
+            st.session_state.acv_df = pd.DataFrame()
+
+
+        if 'overlap_override_df' not in st.session_state:
+            st.session_state.overlap_override_df = pd.DataFrame()
+        
+        if 'acv_button_clicked' not in st.session_state:
+            st.session_state.acv_button_clicked = False
+
+        if (not mapped_df.empty) and st.session_state.column_mapping_status:
+                       
+            st.markdown("<br>", unsafe_allow_html=True) 
+            if st.button("Generate ACV Bookings Details"):
+
+                edited_overlapping_contracts_df = st.session_state.edited_overlapping_contracts_df
+                if st.session_state.apply_overlap_changes and (not edited_overlapping_contracts_df.empty):
+                    overlap_override_df = override_dfs(mapped_df, edited_overlapping_contracts_df, 'rowId') 
+                else:
+                    overlap_override_df = mapped_df.copy()
+
+                st.session_state.overlap_override_df = overlap_override_df
+                acv_df = create_acv_analysis(overlap_override_df)               
+                st.session_state.acv_df = acv_df
+
+
+
+        # -------------------------------------------------------------------------------        
+        # Step 7: Display ACV details 
+        # -------------------------------------------------------------------------------
+
+        st.markdown("<br><br>", unsafe_allow_html=True) 
+        acv_df = st.session_state.acv_df
+
+        if (not acv_df.empty):
+
+            # Display mapped data 
+            with st.expander('Show/Hide TCV and ACV details', expanded=True):
+                st.subheader("TCV and ACV Details :", divider='green') 
+
+                display_acv_df = rename_contract_columns(st.session_state.acv_df)
+            
+                st.dataframe(display_acv_df, use_container_width=False)
+
+
+        # -------------------------------------------------------------------------------        
+        # Step 8: Navigate to Analyze Page
         # -------------------------------------------------------------------------------
 
         if (not mapped_df.empty) and st.session_state.column_mapping_status:
+                        
+            st.markdown("<br><br>", unsafe_allow_html=True) 
 
-
-            if st.button("Analyze ARR Data"):
+            if st.button("Analyze Customer MRR and ARR Data"):
                 st.switch_page("pages/1_Analyze_Data.py")
 
 

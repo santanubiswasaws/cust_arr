@@ -859,21 +859,12 @@ def apply_overrides(input_original_df, input_override_df ):
 
 
 @st.cache_data
-def find_overlapiing_contracts(input_df):
+def find_overlapiing_contracts(input_df, overlap_days_filter):
     """
-    Compares the scratchpad and override dfs - and create a recon_df with the difference in values for a given customer and month
 
-    Parameters:
-    - scratch_pad_df (pd.DataFrame): scratch pad df 
-    - override_df  (pd.DataFrame): override df 
-
-    Returns:
-    - pd.DataFrame: for each customer as row and months as columns, it creates the differnce between the tow input dfs 
     """
 
     df = input_df.copy()
-
-    print(df)
 
     # Sort by customerId and contractStartDate
     df_sorted = df.sort_values(by=['customerId', 'contractStartDate'])
@@ -881,11 +872,14 @@ def find_overlapiing_contracts(input_df):
     # Function to mark overlapping contracts
     def mark_overlaps(group):
         group['prev_contractEndDate'] = group['contractEndDate'].shift()
-        group['overlap'] = group['contractStartDate'] < group['prev_contractEndDate']
+        overlap_condition = (group['contractStartDate'] < group['prev_contractEndDate']) & \
+                            ((group['prev_contractEndDate'] - group['contractStartDate']).dt.days <= overlap_days_filter)
+        group['overlap'] = overlap_condition
         return group
 
     # Apply the function to each group
     df_marked = df_sorted.groupby('customerId').apply(mark_overlaps)
+
 
     # Filter to get only rows that are marked as overlapping or follow an overlapping row
     overlapping_contracts_df = df_marked[
@@ -902,3 +896,75 @@ def find_overlapiing_contracts(input_df):
     print("\nOverlapping Contracts:")
     print(overlapping_contracts_df)
     return overlapping_contracts_df
+
+
+
+
+@st.cache_data
+def override_dfs(input_df1, input_df2, columnIndex):
+    """
+    """
+
+    df1 = input_df1.copy()
+    df2 = input_df2.copy()
+
+    df1.set_index(columnIndex, inplace=True)
+    df2.set_index(columnIndex, inplace=True)
+
+    # Update df1 with values from df2
+    df1.update(df2)
+
+    # Reset the index so 'rowId' becomes a column again
+    df1.reset_index(inplace=True)
+    return df1
+
+
+
+@st.cache_data
+def create_acv_analysis(input_df):
+    """
+    """
+
+    df = input_df.copy()
+
+    # Calculate contractMonths by rounding contractLength/30 - added 0.01 for boundary conditions
+    df['contractMonths'] = ((df['contractDuration'] / 30) + 0.01).round()  
+    # Add a column called monthlyRevenue
+    df['mcv'] = df['totalContractValue'] / df['contractMonths']    
+    df['acv'] = df.apply(lambda row: row['mcv'] * 12 if row['contractMonths'] > 12 else row['mcv'] * row['contractMonths'], axis=1)
+    df['outerYearsCV'] = df['totalContractValue'] - df['acv']
+
+    df.drop('mcv', axis=1, inplace=True)
+    #df.drop('startDateFormat', axis=1, inplace=True)
+    #df.drop('endDateFormat', axis=1, inplace=True)
+    # df.drop('contractDuration', axis=1, inplace=True)
+
+    # move rowId and contractMonths 
+    columns_except_last_two = [col for col in df.columns if col not in ['contractMonths', 'contractDuration', 'startDateFormat', 'endDateFormat', 'rowId']]
+    new_column_order = columns_except_last_two + ['contractMonths', 'contractDuration', 'startDateFormat', 'endDateFormat', 'rowId']
+    df = df[new_column_order]
+
+    df['outerYearsCV']=df['outerYearsCV'].round(0)
+    df['acv']=df['acv'].round(0)
+
+    return df
+
+
+
+@st.cache_data
+def rename_contract_columns(input_df):
+    """
+    Converts the name of the ARR metrcis to meaningful display values
+
+    Parameters:
+    - df (pd.DataFrame): Dataframe with ARR metrics 
+
+    Returns:
+    - pd.DataFrame: Same dataframe but the values in the measureType column is transalted based on the ARR_DISPLAY_COLUMN_MAP dict
+    """
+    # Replace 'measureType' values based on the mapping dictionary
+    df = input_df.copy()
+
+    df.rename(columns=ARR_DISPLAY_COLUMN_MAP, inplace=True)
+
+    return df

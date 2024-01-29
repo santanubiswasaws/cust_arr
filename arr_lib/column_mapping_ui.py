@@ -22,6 +22,9 @@ def perform_column_mapping(predefined_columns, predefined_date_formats, input_df
     if 'mapped_df' not in st.session_state:
         st.session_state.mapped_df = pd.DataFrame()
 
+    if 'raw_mapped_df' not in st.session_state:
+        st.session_state.mapped_df = pd.DataFrame()
+
     if 'column_mapping_status' not in st.session_state:
         st.session_state.column_mapping_status = False
     
@@ -114,9 +117,11 @@ def perform_column_mapping(predefined_columns, predefined_date_formats, input_df
             # change the column header of the input_df based on mapped column
             if result_df is not None:
                 mapped_df = map_columns (input_df, result_df)
-                st.session_state.mapped_df = mapped_df
 
-                validation_status = validate_input_data(st.session_state.mapped_df)
+                validation_status = validate_input_data(mapped_df)
+  
+                st.session_state.mapped_df = mapped_df
+                st.session_state.raw_mapped_df = mapped_df.copy()
                 st.session_state.column_mapping_status = validation_status
 
             return st.session_state.mapped_df, st.session_state.column_mapping_status
