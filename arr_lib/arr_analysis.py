@@ -858,7 +858,7 @@ def apply_overrides(input_original_df, input_override_df ):
 
 
 
-@st.cache_data
+# @st.cache_data
 def find_overlapiing_contracts(input_df, overlap_days_filter):
     """
 

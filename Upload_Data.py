@@ -164,10 +164,8 @@ def main():
 
             if st.button(f"Find Contracts Overlapping {overlap_days_filter} days"):    
                 st.session_state.overlapping_contracts_queried = True           
-                overlapiing_contracts_df = find_overlapiing_contracts(mapped_df, overlap_days_filter)
+                overlapiing_contracts_df = find_overlapiing_contracts(raw_mapped_df, overlap_days_filter)
                 st.session_state.overlapiing_contracts_df = overlapiing_contracts_df
-
-
 
          # -------------------------------------------------------------------------------        
         # Step 5b: Display overlapping Contracts
