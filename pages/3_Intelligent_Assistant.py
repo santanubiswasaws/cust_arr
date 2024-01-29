@@ -146,7 +146,7 @@ with st.spinner("Getting the assistant all geared up with data - almost ready to
         pivoted_agg_df.reset_index(inplace=True)
 
         # this is for display only 
-        pivoted_cust_df['customerId'] = pivoted_cust_df.apply(lambda row: str(row['customerId']) + '-' + row['customerName'], axis=1)
+        # pivoted_cust_df['customerId'] = pivoted_cust_df.apply(lambda row: str(row['customerId']) + '-' + row['customerName'], axis=1)
         st.session_state.pivoted_agg_df = pivoted_agg_df
 
         st.session_state.prepare_ai_data = False
