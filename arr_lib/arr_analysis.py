@@ -657,7 +657,7 @@ def style_positive_negative_lambda(val, positive_bg_color, negative_bg_color, te
         return ''
     
 
-@st.cache_data    
+
 def insert_blank_row(input_df, row_index, index_value, fill_value): 
     """
     Insert a blank row into a DataFrame at the specified row index, 
@@ -749,7 +749,7 @@ def decorate_agg_metrics(input_df, theme):
 
     return styled_df
 
-@st.cache_data
+
 def decorate_logo_metrics_df(input_df, theme):
     """
     Apply Pandas dataframe styles to the aggregated metrics df 
