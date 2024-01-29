@@ -27,11 +27,12 @@ import arr_lib.arr_charts as ac
 llm_model=ah.llm_model
 
 #st.image('insight_logo.png', use_column_width=False)
+st.sidebar.image("ns_logo.png", use_column_width=False)
 st.header("Intelligent Assistant")
 st.markdown("<br>", unsafe_allow_html=True)
 
 # add app log 
-add_logo("ns_logo.png")
+#add_logo("ns_logo.png")
 
 load_dotenv()
 

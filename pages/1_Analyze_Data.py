@@ -16,11 +16,12 @@ from arr_lib.styling import GLOBAL_STYLING
 from streamlit_extras.app_logo import add_logo
 
 #st.image('insight_logo.png', use_column_width=False)
+st.sidebar.image("ns_logo.png", use_column_width=False)
 st.header("Analyze Customer MRR and ARR Data")
 st.markdown("<br>", unsafe_allow_html=True)
 
 # add app log 
-add_logo("ns_logo.png")
+#add_logo("ns_logo.png")
 
 
 if 'mapped_df' not in st.session_state: 
@@ -383,6 +384,7 @@ if (not replan_metrics_df.empty) and st.session_state.column_mapping_status:
     display_replan_metrics_df = st.session_state.replan_metrics_df.copy()        
     display_replan_metrics_df = stylize_metrics_df(display_replan_metrics_df, 'green')
     st.dataframe(display_replan_metrics_df, use_container_width=True)
+
 
 
 st.markdown(BUTTON_STYLE, unsafe_allow_html=True)
