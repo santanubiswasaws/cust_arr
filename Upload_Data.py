@@ -160,7 +160,7 @@ def main():
             
             col1, col2 = st.columns (2)
             with col1:
-                overlap_days_filter = st.slider('How many days overlap do you want to find?', 0, 90 , 30)
+                overlap_days_filter = st.slider('How many days overlap do you want to find?', 0, 30 , 15)
 
             if st.button(f"Find Contracts Overlapping {overlap_days_filter} days"):    
                 st.session_state.overlapping_contracts_queried = True           
