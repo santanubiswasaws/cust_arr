@@ -749,7 +749,7 @@ def decorate_agg_metrics(input_df, theme):
 
     return styled_df
 
-
+@st.cache_data
 def decorate_logo_metrics_df(input_df, theme):
     """
     Apply Pandas dataframe styles to the aggregated metrics df 
@@ -872,7 +872,7 @@ def find_overlapiing_contracts(input_df, overlap_days_filter):
     # Function to mark overlapping contracts
     def mark_overlaps(group):
         group['prev_contractEndDate'] = group['contractEndDate'].shift()
-        overlap_condition = (group['contractStartDate'] < group['prev_contractEndDate']) & \
+        overlap_condition = (group['contractStartDate'] <= group['prev_contractEndDate']) & \
                             ((group['prev_contractEndDate'] - group['contractStartDate']).dt.days <= overlap_days_filter)
         group['overlap'] = overlap_condition
         return group
