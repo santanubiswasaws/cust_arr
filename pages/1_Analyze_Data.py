@@ -272,7 +272,9 @@ if (not planning_df.empty) and st.session_state.column_mapping_status:
 
     try:
 
-        st.markdown(f"<br><p class='md_big'>Edit MRR data if needed (directly in the table below or use csv/excel and copy/paste)</p>", unsafe_allow_html=True)
+        st.markdown("<br>", unsafe_allow_html=True)
+    
+        st.markdown("##### Edit MRR data if needed (directly in the table below or use csv/excel and copy/paste)</p>", unsafe_allow_html=True)
         # set index to customerName - for freeze pane functionality
 
         scratch_df = pd.DataFrame()
