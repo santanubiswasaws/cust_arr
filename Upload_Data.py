@@ -10,13 +10,19 @@ from arr_lib.arr_analysis import highlight_positive_negative_cells, decorate_log
 from arr_lib.arr_analysis import apply_overrides
 from arr_lib.arr_analysis import stylize_metrics_df, rename_columns
 from arr_lib.arr_analysis import find_overlapiing_contracts, override_dfs, create_acv_analysis, rename_contract_columns
+
 from arr_lib.arr_validations import convert_contract_dates_to_str
 from arr_lib.column_mapping_ui import perform_column_mapping
 from arr_lib.column_filtering_ui import perform_column_filtering
+
+
 from arr_lib.styling import BUTTON_STYLE
 from arr_lib.styling import MARKDOWN_STYLES
 from arr_lib.styling import GLOBAL_STYLING
+
 from streamlit_extras.app_logo import add_logo
+from arr_lib.print_logos import print_logos
+
 from dotenv import load_dotenv
 import os
 
@@ -36,20 +42,19 @@ def main():
     st.markdown(MARKDOWN_STYLES, unsafe_allow_html=True)
     st.markdown(GLOBAL_STYLING, unsafe_allow_html=True)
 
+    print_logos()
 
-    load_dotenv()
+    # load_dotenv()
 
-    APP_LOGO = os.getenv("APP_LOGO")
-    if not ( APP_LOGO is None):
-        add_logo(APP_LOGO)
+    # APP_LOGO = os.getenv("APP_LOGO")
+    # if not ( APP_LOGO is None):
+    #     add_logo(APP_LOGO)
 
-    CUST_LOGO = os.getenv("CUST_LOGO")
-    if not ( CUST_LOGO is None):
-        CUST_LOGO = st.secrets["CUST_LOGO"]
-        if not ( CUST_LOGO is None):
-            st.sidebar.image(CUST_LOGO, use_column_width=False)
-
-    st.write(st.secrets)
+    # CUST_LOGO = os.getenv("CUST_LOGO")
+    # if not ( CUST_LOGO is None):
+    #     CUST_LOGO = st.secrets["CUST_LOGO"]
+    #     if not ( CUST_LOGO is None):
+    #         st.sidebar.image(CUST_LOGO, use_column_width=False)
     
     # Initialize file upload details 
     if 'uploaded_file' not in st.session_state:

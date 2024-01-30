@@ -13,6 +13,8 @@ from arr_lib.column_mapping_ui import perform_column_mapping
 from arr_lib.styling import BUTTON_STYLE
 from arr_lib.styling import MARKDOWN_STYLES
 from arr_lib.styling import GLOBAL_STYLING
+
+from arr_lib.print_logos import print_logos
 from streamlit_extras.app_logo import add_logo
 
 from dotenv import load_dotenv
@@ -23,13 +25,7 @@ st.markdown("<br>", unsafe_allow_html=True)
 
 load_dotenv()
 
-APP_LOGO = os.getenv("APP_LOGO")
-if not ( APP_LOGO is None):
-    add_logo(APP_LOGO)
-
-CUST_LOGO = os.getenv("CUST_LOGO")
-if not ( CUST_LOGO is None):
-    st.sidebar.image(CUST_LOGO, use_column_width=False)
+print_logos()
 
 
 if 'mapped_df' not in st.session_state: 

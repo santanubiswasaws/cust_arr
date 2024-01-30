@@ -4,6 +4,8 @@ import pandas as pd
 import altair as alt
 from pandas.tseries.offsets import MonthEnd
 from datetime import datetime, timedelta
+
+from arr_lib.print_logos import print_logos
 from streamlit_extras.app_logo import add_logo
 
 
@@ -23,13 +25,7 @@ st.markdown("<br>", unsafe_allow_html=True)
 
 load_dotenv()
 
-APP_LOGO = os.getenv("APP_LOGO")
-if not ( APP_LOGO is None):
-    add_logo(APP_LOGO)
-
-CUST_LOGO = os.getenv("CUST_LOGO")
-if not ( CUST_LOGO is None):
-    st.sidebar.image(CUST_LOGO, use_column_width=False)
+print_logos()
 
 
 if 'metrics_df' not in st.session_state: 
