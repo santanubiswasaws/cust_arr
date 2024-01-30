@@ -49,6 +49,7 @@ def main():
         if not ( CUST_LOGO is None):
             st.sidebar.image(CUST_LOGO, use_column_width=False)
 
+    st.write(st.secrets)
     
     # Initialize file upload details 
     if 'uploaded_file' not in st.session_state:
