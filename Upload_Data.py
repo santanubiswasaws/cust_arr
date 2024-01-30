@@ -45,7 +45,9 @@ def main():
 
     CUST_LOGO = os.getenv("CUST_LOGO")
     if not ( CUST_LOGO is None):
-        st.sidebar.image(CUST_LOGO, use_column_width=False)
+        CUST_LOGO = st.secrets["CUST_LOGO"]
+        if not ( CUST_LOGO is None):
+            st.sidebar.image(CUST_LOGO, use_column_width=False)
 
     
     # Initialize file upload details 
