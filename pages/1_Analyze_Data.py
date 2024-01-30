@@ -15,13 +15,21 @@ from arr_lib.styling import MARKDOWN_STYLES
 from arr_lib.styling import GLOBAL_STYLING
 from streamlit_extras.app_logo import add_logo
 
-#st.image('insight_logo.png', use_column_width=False)
-st.sidebar.image("ns_logo.png", use_column_width=False)
+from dotenv import load_dotenv
+import os
+
 st.header("Analyze Customer MRR and ARR Data")
 st.markdown("<br>", unsafe_allow_html=True)
 
-# add app log 
-add_logo("ii_logo.png")
+load_dotenv()
+
+APP_LOGO = os.getenv("APP_LOGO")
+if not ( APP_LOGO is None):
+    add_logo(APP_LOGO)
+
+CUST_LOGO = os.getenv("CUST_LOGO")
+if not ( CUST_LOGO is None):
+    st.sidebar.image(CUST_LOGO, use_column_width=False)
 
 
 if 'mapped_df' not in st.session_state: 
