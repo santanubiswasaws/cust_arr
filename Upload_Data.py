@@ -17,6 +17,8 @@ from arr_lib.styling import BUTTON_STYLE
 from arr_lib.styling import MARKDOWN_STYLES
 from arr_lib.styling import GLOBAL_STYLING
 from streamlit_extras.app_logo import add_logo
+from dotenv import load_dotenv
+import os
 
 
 # on_change callback for file upload 
@@ -27,7 +29,6 @@ def clear_session_cb ():
 def main():
 
     st.set_page_config(page_title="ARR Analysis" , layout='wide')
-    st.sidebar.image("ns_logo.png", use_column_width=False)
     st.header("Analyze Annual Recurring Revnue (ARR)")
 
 
@@ -36,8 +37,16 @@ def main():
     st.markdown(GLOBAL_STYLING, unsafe_allow_html=True)
 
 
-    # add app log 
-    #add_logo("ns_logo.png")
+    load_dotenv()
+
+    APP_LOGO = os.getenv("APP_LOGO")
+    if not ( APP_LOGO is None):
+        add_logo(APP_LOGO)
+
+    CUST_LOGO = os.getenv("CUST_LOGO")
+    if not ( CUST_LOGO is None):
+        st.sidebar.image(CUST_LOGO, use_column_width=False)
+
     
     # Initialize file upload details 
     if 'uploaded_file' not in st.session_state:

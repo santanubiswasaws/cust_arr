@@ -21,7 +21,7 @@ st.header("Analyze Customer MRR and ARR Data")
 st.markdown("<br>", unsafe_allow_html=True)
 
 # add app log 
-#add_logo("ns_logo.png")
+add_logo("ii_logo.png")
 
 
 if 'mapped_df' not in st.session_state: 

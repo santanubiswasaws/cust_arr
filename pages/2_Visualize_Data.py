@@ -14,13 +14,22 @@ from arr_lib.styling import GLOBAL_STYLING
 import arr_lib.arr_visualize as av
 import arr_lib.arr_charts as ac
 
-#st.image('insight_logo.png', use_column_width=False)
-st.sidebar.image("ns_logo.png", use_column_width=False)
+from dotenv import load_dotenv
+import os
+
+
 st.header("Visualize ARR Data")
 st.markdown("<br>", unsafe_allow_html=True)
 
-# add app log 
-#add_logo("ns_logo.png")
+load_dotenv()
+
+APP_LOGO = os.getenv("APP_LOGO")
+if not ( APP_LOGO is None):
+    add_logo(APP_LOGO)
+
+CUST_LOGO = os.getenv("CUST_LOGO")
+if not ( CUST_LOGO is None):
+    st.sidebar.image(CUST_LOGO, use_column_width=False)
 
 
 if 'metrics_df' not in st.session_state: 

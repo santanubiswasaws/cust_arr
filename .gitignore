@@ -4,6 +4,7 @@ __pycache__/
 *$py.class
 virenv/
 scratch*.py
+scratch*.md
 data/
 .vscode/
 .env
