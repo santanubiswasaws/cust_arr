@@ -1,8 +1,8 @@
 
-
 import streamlit as st
 import pandas as pd
 import altair as alt
+from streamlit_dimensions import st_dimensions
 
 # Streamlit page configuration for a wide layout
 st.set_page_config(page_title="Waterfall Chart with Sales and Credits", layout='wide')
@@ -50,18 +50,31 @@ def create_chart(df, chart_width):
     sales_bars = base.transform_filter(
         alt.datum.sales != 0
     ).mark_bar(size=20, color='#88b988').encode(
-        y=alt.Y('sales_end:Q', axis=alt.Axis(title="Monthly Recurring Revenue")),
+        y=alt.Y('sales_end:Q', axis=alt.Axis(title="Monthly Recurring Revenue", format=',.0f', labelPadding=40)),
         y2='previous_month_cumm_sales:Q'
     )
 
-    # Sales data labels
+    # # Sales data labels
+    # sales_labels = base.transform_filter(
+    #     alt.datum.sales != 0
+    # ).mark_text(align='left', angle=270, dx=10).encode(
+    #     x='label:N',
+    #     y=alt.Y('crd_start:Q', axis=alt.Axis(labels=False)),
+    #     text=alt.Text('sales:Q', format=',')
+    # )
+
+
+    # Sales data labels with explicit Y positioning
     sales_labels = base.transform_filter(
         alt.datum.sales != 0
     ).mark_text(align='left', angle=270, dx=10).encode(
         x='label:N',
-        y=alt.Y('crd_start:Q', axis=alt.Axis(labels=False)),
+        y=alt.Y('sales_end:Q', axis=alt.Axis(labels=False)),  # Position based on sales_end
         text=alt.Text('sales:Q', format=',')
     )
+
+
+
 
     # Credit bars
     credit_bars = base.transform_filter(
@@ -72,14 +85,23 @@ def create_chart(df, chart_width):
         y2='crd_start:Q'
     )
 
-    # Credit data labels
+    # Credit data labels with explicit Y positioning
     credit_labels = base.transform_filter(
         alt.datum.credit != 0
-    ).mark_text(align='left', angle=270, dy=20, dx=-40).encode(
+    ).mark_text(align='left', angle=270, dx=-40).encode(
         x='label:N',
-        y=alt.Y('current_month_cumm_sales:Q', axis=alt.Axis(labels=False)),
+        y=alt.Y('crd_end:Q', axis=alt.Axis(labels=False)),  # Position based on crd_end
         text=alt.Text('credit:Q', format=',')
     )
+
+    # # Credit data labels
+    # credit_labels = base.transform_filter(
+    #     alt.datum.credit != 0
+    # ).mark_text(align='left', angle=270, dy=20, dx=-40).encode(
+    #     x='label:N',
+    #     y=alt.Y('current_month_cumm_sales:Q', axis=alt.Axis(labels=False)),
+    #     text=alt.Text('credit:Q', format=',')
+    # )
 
     # Rules
     rules = base.mark_rule(color="#707070", opacity=1, strokeWidth=1, xOffset=10, x2Offset=10).encode(
@@ -114,10 +136,21 @@ def create_chart(df, chart_width):
         y='current_month_cumm_sales:Q'
     )
 
-    # Combine main chart elements
-    main_chart = sales_bars + credit_bars + sales_labels + credit_labels + rules + closing_sales + text_increase + text_decrease 
 
-    main_chart = main_chart.properties(width=chart_width, height=1000)
+    # Additional data for Y-axis line
+    y_axis_df = pd.DataFrame({'label': [df['label'].min()], 'value': [df['current_month_cumm_sales'].min()]})
+    y_axis_line = alt.Chart(y_axis_df).mark_rule(color="#bbbbbb", strokeWidth=1).encode(
+        x='label:N',
+        y=alt.value(0)
+    )
+
+    # Combine main chart elements - as of now - sales_labels and credit_labels are hiding Y axis labels 
+
+    main_chart = sales_bars + credit_bars + sales_labels + credit_labels + rules + closing_sales + text_increase + text_decrease 
+    #main_chart = sales_bars + credit_bars +  rules + closing_sales + text_increase + text_decrease 
+
+
+    main_chart = main_chart.properties(width=chart_width, height=600)
 
 
 
@@ -162,7 +195,11 @@ def create_chart(df, chart_width):
 def app():
     st.title("Multi Category Waterfall  - WIP")
 
-    chart_width = 1200
+    dimension_data = st_dimensions(key="main")
+    try:
+        chart_width = int(dimension_data["width"] * 0.9)
+    except: 
+        chart_width = 1100
 
     df = create_dataframe()
     chart = create_chart(df, chart_width)

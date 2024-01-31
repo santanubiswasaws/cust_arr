@@ -1,5 +1,6 @@
 streamlit
 streamlit_extras
+streamlit-dimensions
 langchain
 langchain_experimental
 langchain_openai
@@ -7,3 +8,4 @@ openai
 python.dotenv
 tabulate
 fuzzywuzzy[speedup]
+
