@@ -39,7 +39,7 @@ def create_dataframe():
 
     return df
 
-def create_chart(df):
+def create_chart(df, chart_width):
 
 
     base = alt.Chart(df).encode(
@@ -117,7 +117,9 @@ def create_chart(df):
     # Combine main chart elements
     main_chart = sales_bars + credit_bars + sales_labels + credit_labels + rules + closing_sales + text_increase + text_decrease 
 
-    main_chart = main_chart.properties(width=1100, height=1000)
+    main_chart = main_chart.properties(width=chart_width, height=1000)
+
+
 
     # Update the legend data
     legend_data = pd.DataFrame({    
@@ -159,8 +161,11 @@ def create_chart(df):
 # Streamlit app
 def app():
     st.title("Multi Category Waterfall  - WIP")
+
+    chart_width = 1200
+
     df = create_dataframe()
-    chart = create_chart(df)
+    chart = create_chart(df, chart_width)
     st.markdown("<br><br>", unsafe_allow_html=True)
     st.altair_chart(chart, use_container_width=True)
 
