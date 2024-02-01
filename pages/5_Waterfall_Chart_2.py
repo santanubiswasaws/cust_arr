@@ -50,26 +50,17 @@ def create_chart(df, chart_width):
     sales_bars = base.transform_filter(
         alt.datum.sales != 0
     ).mark_bar(size=20, color='#88b988').encode(
-        y=alt.Y('sales_end:Q', axis=alt.Axis(title="Monthly Recurring Revenue", format=',.0f', labelPadding=40)),
+        y=alt.Y('sales_end:Q', axis=alt.Axis(title="Monthly Recurring Revenue", format=',.0f')),
         y2='previous_month_cumm_sales:Q'
     )
-
-    # # Sales data labels
-    # sales_labels = base.transform_filter(
-    #     alt.datum.sales != 0
-    # ).mark_text(align='left', angle=270, dx=10).encode(
-    #     x='label:N',
-    #     y=alt.Y('crd_start:Q', axis=alt.Axis(labels=False)),
-    #     text=alt.Text('sales:Q', format=',')
-    # )
-
 
     # Sales data labels with explicit Y positioning
     sales_labels = base.transform_filter(
         alt.datum.sales != 0
-    ).mark_text(align='left', angle=270, dx=10).encode(
+    ).mark_text(angle=270, dx=15).encode(
         x='label:N',
-        y=alt.Y('sales_end:Q', axis=alt.Axis(labels=False)),  # Position based on sales_end
+        y='sales_end:Q',
+        #y=alt.Y('sales_end:Q', axis=alt.Axis(labels=False)),  # Position based on sales_end
         text=alt.Text('sales:Q', format=',')
     )
 
@@ -88,20 +79,11 @@ def create_chart(df, chart_width):
     # Credit data labels with explicit Y positioning
     credit_labels = base.transform_filter(
         alt.datum.credit != 0
-    ).mark_text(align='left', angle=270, dx=-40).encode(
+    ).mark_text(align='left', angle=270, dx=-35, dy=20).encode(
         x='label:N',
-        y=alt.Y('crd_end:Q', axis=alt.Axis(labels=False)),  # Position based on crd_end
+        y='crd_end:Q', 
         text=alt.Text('credit:Q', format=',')
     )
-
-    # # Credit data labels
-    # credit_labels = base.transform_filter(
-    #     alt.datum.credit != 0
-    # ).mark_text(align='left', angle=270, dy=20, dx=-40).encode(
-    #     x='label:N',
-    #     y=alt.Y('current_month_cumm_sales:Q', axis=alt.Axis(labels=False)),
-    #     text=alt.Text('credit:Q', format=',')
-    # )
 
     # Rules
     rules = base.mark_rule(color="#707070", opacity=1, strokeWidth=1, xOffset=10, x2Offset=10).encode(
@@ -131,7 +113,7 @@ def create_chart(df, chart_width):
     last_month_data = df.iloc[-1]
 
     closing_sales = alt.Chart(pd.DataFrame({'label': [last_month_data['label']], 
-                                            'current_month_cumm_sales': [last_month_data['current_month_cumm_sales']]})).mark_bar(size=20, color='#55aadd', xOffset=40).encode(
+                                            'current_month_cumm_sales': [last_month_data['current_month_cumm_sales']]})).mark_bar(size=20, color='#77bbed', xOffset=40).encode(
         x='label:N',
         y='current_month_cumm_sales:Q'
     )
@@ -147,11 +129,8 @@ def create_chart(df, chart_width):
     # Combine main chart elements - as of now - sales_labels and credit_labels are hiding Y axis labels 
 
     main_chart = sales_bars + credit_bars + sales_labels + credit_labels + rules + closing_sales + text_increase + text_decrease 
-    #main_chart = sales_bars + credit_bars +  rules + closing_sales + text_increase + text_decrease 
-
 
     main_chart = main_chart.properties(width=chart_width, height=600)
-
 
 
     # Update the legend data
