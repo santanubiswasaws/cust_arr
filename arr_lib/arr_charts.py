@@ -683,7 +683,11 @@ def create_waterfall_chart(input_df, chart_width):
     final_chart = alt.vconcat(
         main_chart,
         legend,
-        spacing=10
+        spacing=10,
+        padding= {"bottom": 15, "top":25, "left": 15, "right": 15}
+    ).configure(    
+        background="#F5F8F8" # Set the background color
     )
 
     return final_chart
+
