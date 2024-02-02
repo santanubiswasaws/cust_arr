@@ -11,7 +11,7 @@ from arr_lib import styling as style
 
 
 
-def arr_walk_chart(metrics_df, bar_color, chart_title): 
+def arr_walk_chart(metrics_df, bar_color, chart_title, chart_width): 
     """
     generate and return an altair chart - for customer ARR walk 
     """
@@ -65,7 +65,7 @@ def arr_walk_chart(metrics_df, bar_color, chart_title):
     # Layer the text and the bar chart
     arr_walk_chart = alt.layer(bar_chart, text_chart).properties(
         title=chart_title,
-        width=1100,
+        width=chart_width,
         height=400,
         padding= {"bottom": 15, "top":20, "left": 15, "right": 15}
     ).configure(
@@ -84,7 +84,7 @@ def arr_walk_chart(metrics_df, bar_color, chart_title):
 
 
 
-def cust_count_chart(df, chart_color, chart_title): 
+def cust_count_chart(df, chart_color, chart_title, chart_width): 
        
     # Check if 'Total_Sales' column exists, and drop it if it does
     if 'Total_Sales' in df.columns:
@@ -101,7 +101,7 @@ def cust_count_chart(df, chart_color, chart_title):
         y=alt.Y('customerCount:Q', title="Monthly Count ", axis=alt.Axis(format=',.0f')) 
     ).properties(
         title=chart_title,
-        width=1100,
+        width=chart_width,
         height=350,
         padding= {"bottom": 15, "top":20, "left": 15, "right": 15}
     ).configure(
@@ -119,7 +119,7 @@ def cust_count_chart(df, chart_color, chart_title):
     return cust_count_result
 
 
-def cust_count_waterfall_chart(df,  chart_title): 
+def cust_count_waterfall_chart(df,  chart_title, chart_width): 
 
      
     # Check if 'Total_Sales' column exists, and drop it if it does
@@ -163,7 +163,7 @@ def cust_count_waterfall_chart(df,  chart_title):
         tooltip=['month', 'translated_measureType', 'customerCount']
     ).properties(
         title=chart_title,
-        width=1100,
+        width=chart_width,
         height=350,
         padding= {"bottom": 15, "top":15, "left": 15, "right": 15}
     ).configure(
@@ -181,7 +181,7 @@ def cust_count_waterfall_chart(df,  chart_title):
     return count_wf_chart
 
 
-def top_cust_chart(customer_arr_df, bar_color, chart_title): 
+def top_cust_chart(customer_arr_df, bar_color, chart_title, chart_width): 
     """
     generate and return an altair chart - for customer pareto 
     """
@@ -225,7 +225,7 @@ def top_cust_chart(customer_arr_df, bar_color, chart_title):
     # Layer the text and the bar chart
     top_final_chart = alt.layer(top_bar_chart, top_text_chart).properties(
         title=chart_title,
-        width=1100,
+        width=chart_width,
         height=500,
         padding= {"bottom": 15, "top":25, "left": 15, "right": 15}
     ).configure(    
@@ -244,7 +244,7 @@ def top_cust_chart(customer_arr_df, bar_color, chart_title):
 
 
 
-def cust_arr_waterfall_chart(df,  chart_title): 
+def cust_arr_waterfall_chart(df,  chart_title, chart_width): 
 
      
     # Check if 'Total_Sales' column exists, and drop it if it does
@@ -294,7 +294,7 @@ def cust_arr_waterfall_chart(df,  chart_title):
         tooltip=['month', 'translated_measureType', 'MRR']
     ).properties(
         title=chart_title,
-        width=1100,
+        width=chart_width,
         height=600,
         padding= {"bottom": 15, "top":25, "left": 15, "right": 15}
     ).configure(    
@@ -587,7 +587,6 @@ def create_waterfall_chart(input_df, chart_width):
     opening_rev = alt.Chart(pd.DataFrame({'period': [first_period_data['period']], 
                                             'preRev': [first_period_data['preRev']], 
                                             'startFromY': [first_period_data['startFromY']], 
-                                            'startFrom' : [(min_val - padding)],
                                             })).mark_bar(size=20, color=style.beginPeriod_color, xOffset=-20).encode(
         x='period:N',
         y=alt.Y('preRev:Q', scale=common_y_scale), 
@@ -612,7 +611,7 @@ def create_waterfall_chart(input_df, chart_width):
     ).encode(
         x='period:N',
         y='preMid:Q',
-        y2='startFrom:Q',
+        y2='startFromY:Q',
         text=alt.Text('label:N', format=',.0f')  # Assuming you want to display the revenue as text
     )
 
@@ -647,12 +646,14 @@ def create_waterfall_chart(input_df, chart_width):
                 churn_bars_no_offset +  churn_bars_10_offset + churn_bars_20_offset +  churn_bars_30_offset + \
                 churn_label_no_offset + churn_label_10_offset + churn_label_20_offset + churn_label_30_offset + \
                 rules_no_offset +  rules_10_offset + rules_20_offset +  rules_30_offset + rules_left_offset + \
-                text_increase + text_decrease + opening_rev  +  closing_rev #+ opening_label + closng_label
-    
-                # churn_bars + rules
+                text_increase + text_decrease + opening_rev  +  closing_rev 
+                #+ opening_label + closng_label
 
 
-    main_chart = main_chart.properties(width=chart_width, height=500)
+    main_chart = main_chart.properties(
+        width=chart_width, 
+        height=500
+        )
 
     # Update the legend data
     legend_data = pd.DataFrame({    
@@ -686,6 +687,6 @@ def create_waterfall_chart(input_df, chart_width):
         main_chart,
         legend,
         spacing=10
-    )
+    ).properties(padding={"bottom": 15, "top":25, "left": 15, "right": 15}).configure(background="#F5F8F8")
 
     return final_chart

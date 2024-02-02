@@ -215,13 +215,13 @@ arr_tab1, arr_tab2= st.tabs(["Final Adjusted ARR", "Uploaded ARR"])
 with arr_tab1: 
 
     st.markdown("<br>", unsafe_allow_html=True)
-    arr_result = ac.arr_walk_chart(replan_metrics_df, '#88b988', 'Final Adjusted ARR')
+    arr_result = ac.arr_walk_chart(replan_metrics_df, '#88b988', 'Final Adjusted ARR', chart_width)
     st.altair_chart(arr_result, theme="streamlit", use_container_width=False)
 
 with arr_tab2: 
 
     st.markdown("<br>", unsafe_allow_html=True)
-    upld_arr_result = ac.arr_walk_chart(metrics_df, '#77aaca', 'Uploaded ARR')
+    upld_arr_result = ac.arr_walk_chart(metrics_df, '#77aaca', 'Uploaded ARR', chart_width)
     st.altair_chart(upld_arr_result, theme="streamlit", use_container_width=False)
 
 st.markdown("<br>", unsafe_allow_html=True)
@@ -243,13 +243,13 @@ with cust_cout_tab1:
     st.markdown("<br>", unsafe_allow_html=True)
 
     # customer count 
-    replan_cust_count_result = ac.cust_count_chart(replan_logo_metrics_df, '#88b988', 'Adjusted Customer Count' )
+    replan_cust_count_result = ac.cust_count_chart(replan_logo_metrics_df, '#88b988', 'Adjusted Customer Count' , chart_width)
     st.altair_chart(replan_cust_count_result, theme="streamlit", use_container_width=False)
 
     st.markdown("<br>", unsafe_allow_html=True)
 
     # customer count waterfall
-    replan_cust_count_wf_result = ac.cust_count_waterfall_chart (replan_logo_metrics_df, 'Adjusted Customer Count Waterfall' )
+    replan_cust_count_wf_result = ac.cust_count_waterfall_chart (replan_logo_metrics_df, 'Adjusted Customer Count Waterfall' , chart_width)
     st.altair_chart(replan_cust_count_wf_result, theme="streamlit", use_container_width=False)
 
 
@@ -258,13 +258,13 @@ with cust_cout_tab2:
     st.markdown("<br>", unsafe_allow_html=True)
 
     # customer count 
-    replan_cust_count_result = ac.cust_count_chart(logo_metrics_df, '#77aaca', 'Uploaded Customer Count' )
+    replan_cust_count_result = ac.cust_count_chart(logo_metrics_df, '#77aaca', 'Uploaded Customer Count' , chart_width)
     st.altair_chart(replan_cust_count_result, theme="streamlit", use_container_width=False)
 
     st.markdown("<br>", unsafe_allow_html=True)
 
     # Customer count waterfall 
-    cust_count_wf_result = ac.cust_count_waterfall_chart (logo_metrics_df, 'Customer Count Waterfall' )
+    cust_count_wf_result = ac.cust_count_waterfall_chart (logo_metrics_df, 'Customer Count Waterfall' , chart_width)
     st.altair_chart(cust_count_wf_result, theme="streamlit", use_container_width=False)
 
 st.markdown("<br>", unsafe_allow_html=True)
@@ -282,13 +282,13 @@ top_cust_tab1, top_cust_tab2= st.tabs(["Adjusted Values", "Uploaded Values"])
 with top_cust_tab1:
     st.markdown("<br>", unsafe_allow_html=True)
 
-    top_final_chart = ac.top_cust_chart(replan_customer_arr_df, '#99c999', 'Top Customers - Adjusted' )
+    top_final_chart = ac.top_cust_chart(replan_customer_arr_df, '#99c999', 'Top Customers - Adjusted' , chart_width)
     st.altair_chart(top_final_chart, theme="streamlit", use_container_width=False)
 
 with top_cust_tab2:
     st.markdown("<br>", unsafe_allow_html=True)
 
-    top_final_chart1 = ac.top_cust_chart(customer_arr_df, '#77aaca', 'Top Customers - Uploaded' )
+    top_final_chart1 = ac.top_cust_chart(customer_arr_df, '#77aaca', 'Top Customers - Uploaded' , chart_width)
     st.altair_chart(top_final_chart1, theme="streamlit", use_container_width=False)
 
 st.markdown("<br>", unsafe_allow_html=True)
@@ -320,7 +320,7 @@ with cust_arr_tab1:
     filtered_df = df_original[df_original['customerId'] == selected_id]
 
     st.markdown("<br>", unsafe_allow_html=True)
-    mrr_wf_result = ac.cust_arr_waterfall_chart(filtered_df, 'Customer MRR Waterfall - Adjusted')
+    mrr_wf_result = ac.cust_arr_waterfall_chart(filtered_df, 'Customer MRR Waterfall - Adjusted', chart_width)
 
     st.altair_chart(mrr_wf_result, theme="streamlit", use_container_width=False)
 
@@ -347,7 +347,7 @@ with cust_arr_tab2:
     filtered_df = df_original[df_original['customerId'] == selected_id]
 
     st.markdown("<br>", unsafe_allow_html=True)
-    mrr_wf_result = ac.cust_arr_waterfall_chart(filtered_df, 'Customer MRR Waterfall - Adjusted')
+    mrr_wf_result = ac.cust_arr_waterfall_chart(filtered_df, 'Customer MRR Waterfall - Adjusted', chart_width)
 
     st.altair_chart(mrr_wf_result, theme="streamlit", use_container_width=False)
 
