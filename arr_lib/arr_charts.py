@@ -326,7 +326,7 @@ def create_waterfall_chart(input_df, chart_width):
     df = input_df.copy()
 
     min_val = df['curRev'].min()
-    padding = (df['curRev'].max() - min_val) * 0.15  # Adjust padding as needed
+    padding = (df['curRev'].max() - min_val) * 0.05  # Adjust padding as needed
 
     common_y_scale = alt.Scale(domainMin=min_val - padding)
 
@@ -340,7 +340,7 @@ def create_waterfall_chart(input_df, chart_width):
     nb_bars = base.transform_filter(
         alt.datum.newBusiness != 0
     ).mark_bar(size=20, color=style.newBusiness_color).encode(
-        y=alt.Y('nb_end:Q', scale=common_y_scale, axis=alt.Axis(title="Recurring Revenue (in thousands)", format=',.0f', domain=True, domainColor='black', domainWidth=1, ticks=True, tickWidth=1, tickSize=8)),
+        y=alt.Y('nb_end:Q', scale=common_y_scale, axis=alt.Axis(title="Recurring Revenue", format=',.0f', domain=True, domainColor='black', domainWidth=1, ticks=True, tickWidth=1, tickSize=8)),
         y2='preRev:Q'
     )
 
@@ -585,13 +585,11 @@ def create_waterfall_chart(input_df, chart_width):
     # Opening sales bar with xOffset
     first_period_data = df.iloc[0]
     opening_rev = alt.Chart(pd.DataFrame({'period': [first_period_data['period']], 
-                                            'preRev': [first_period_data['preRev']], 
-                                            'startFromY': [first_period_data['startFromY']], 
-                                            'startFrom' : [(min_val - padding)],
+                                            'preRev': [first_period_data['preRev']], 'startFrom' : [(min_val - padding)],
                                             })).mark_bar(size=20, color=style.beginPeriod_color, xOffset=-20).encode(
         x='period:N',
         y=alt.Y('preRev:Q', scale=common_y_scale), 
-        y2='startFromY:Q'
+        y2='startFrom:N'
     )
 
 
@@ -619,7 +617,7 @@ def create_waterfall_chart(input_df, chart_width):
     closing_rev = alt.Chart(df[df['period'] == 'End Period']).mark_bar(size=20, color=style.endPeriod_color, xOffset=20).encode(
         x='period:N',
         y=alt.Y('curRev:Q', scale=common_y_scale),
-        y2='startFromY:Q'
+        y2='startFromY'
     )
 
         
