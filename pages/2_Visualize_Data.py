@@ -53,6 +53,29 @@ if (metrics_df.empty or replan_metrics_df.empty):
 
 chart_width = av.chart_width('main')
 
+
+## ARR waterfall chart 
+st.markdown("<br>", unsafe_allow_html=True)
+st.subheader('ARR Waterfall Analysis ')
+arr_wf_tab1, arr_wf_tab2= st.tabs(["Adjusted Values", "Uploaded Values"])
+with arr_wf_tab1:
+    st.markdown("<br>", unsafe_allow_html=True)
+    date_selector_1 = st.date_input('Select end date for Waterfall analysis ', key="wf_dt_1")
+    with st.spinner("Generating ARR Waterfall ..."):
+        df1 = av.prepare_waterfall_data(replan_metrics_df, date_selector_1)
+        agg_arr_wf_chart_replan = ac.create_waterfall_chart(df1, chart_width)
+        st.altair_chart(agg_arr_wf_chart_replan, theme="streamlit", use_container_width=False)
+
+
+with arr_wf_tab2: 
+    st.markdown("<br>", unsafe_allow_html=True)
+    date_selector_2 = st.date_input('Select end date for Waterfall analysis ', key="wf_dt_2")
+    with st.spinner("Generating ARR Waterfall ..."):
+        df2 = av.prepare_waterfall_data(metrics_df, date_selector_2)
+        agg_arr_wf_chart = ac.create_waterfall_chart(df2, chart_width)
+        st.altair_chart(agg_arr_wf_chart, theme="streamlit", use_container_width=False)
+
+
 ##
 ## Metrics card for last year 
 ## 1. ARR Growth, 2. New Customers, 3. NRR, 4. GRR
@@ -326,29 +349,27 @@ with cust_arr_tab2:
     st.altair_chart(mrr_wf_result, theme="streamlit", use_container_width=False)
 
 
-## ARR waterfall chart 
-st.markdown("<br>", unsafe_allow_html=True)
-st.subheader('ARR Waterfall Analysis ')
-arr_wf_tab1, arr_wf_tab2= st.tabs(["Adjusted Values", "Uploaded Values"])
-with arr_wf_tab1:
-    st.markdown("<br>", unsafe_allow_html=True)
-    date_selector_1 = st.date_input('Select end date for Waterfall analysis ', key="wf_dt_1")
-    with st.spinner("Generating ARR Waterfall ..."):
-        df1 = av.prepare_waterfall_data(replan_metrics_df, date_selector_1)
-        agg_arr_wf_chart_replan = ac.create_waterfall_chart(df1, chart_width)
-        st.altair_chart(agg_arr_wf_chart_replan, theme="streamlit", use_container_width=False)
+# ## ARR waterfall chart 
+# st.markdown("<br>", unsafe_allow_html=True)
+# st.subheader('ARR Waterfall Analysis ')
+# arr_wf_tab1, arr_wf_tab2= st.tabs(["Adjusted Values", "Uploaded Values"])
+# with arr_wf_tab1:
+#     st.markdown("<br>", unsafe_allow_html=True)
+#     date_selector_1 = st.date_input('Select end date for Waterfall analysis ', key="wf_dt_1")
+#     with st.spinner("Generating ARR Waterfall ..."):
+#         df1 = av.prepare_waterfall_data(replan_metrics_df, date_selector_1)
+#         agg_arr_wf_chart_replan = ac.create_waterfall_chart(df1, chart_width)
+#         st.altair_chart(agg_arr_wf_chart_replan, theme="streamlit", use_container_width=False)
 
-        # st.dataframe(df1, use_container_width=True)
 
-with arr_wf_tab2: 
-    st.markdown("<br>", unsafe_allow_html=True)
-    date_selector_2 = st.date_input('Select end date for Waterfall analysis ', key="wf_dt_2")
-    with st.spinner("Generating ARR Waterfall ..."):
-        df2 = av.prepare_waterfall_data(metrics_df, date_selector_2)
-        agg_arr_wf_chart = ac.create_waterfall_chart(df2, chart_width)
-        st.altair_chart(agg_arr_wf_chart, theme="streamlit", use_container_width=False)
+# with arr_wf_tab2: 
+#     st.markdown("<br>", unsafe_allow_html=True)
+#     date_selector_2 = st.date_input('Select end date for Waterfall analysis ', key="wf_dt_2")
+#     with st.spinner("Generating ARR Waterfall ..."):
+#         df2 = av.prepare_waterfall_data(metrics_df, date_selector_2)
+#         agg_arr_wf_chart = ac.create_waterfall_chart(df2, chart_width)
+#         st.altair_chart(agg_arr_wf_chart, theme="streamlit", use_container_width=False)
 
-        # st.dataframe(df2, use_container_width=True)
 
 
 
