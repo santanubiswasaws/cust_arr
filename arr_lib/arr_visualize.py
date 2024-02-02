@@ -145,7 +145,7 @@ def prepare_waterfall_data(input_df, date_selector):
 
 
     min_val = df['curRev'].min()
-    padding = (df['curRev'].max() - min_val) * 0.05  # Adjust padding as needed
+    padding = (df['curRev'].max() - min_val) * 0.10  # Adjust padding as needed
     
     df['startFromY'] = (min_val - padding)
 
