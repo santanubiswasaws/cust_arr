@@ -340,7 +340,7 @@ def create_waterfall_chart(input_df, chart_width):
     nb_bars = base.transform_filter(
         alt.datum.newBusiness != 0
     ).mark_bar(size=20, color=style.newBusiness_color).encode(
-        y=alt.Y('nb_end:Q', scale=common_y_scale, axis=alt.Axis(title="Recurring Revenue", format=',.0f', domain=True, domainColor='black', domainWidth=1, ticks=True, tickWidth=1, tickSize=8)),
+        y=alt.Y('nb_end:Q', scale=common_y_scale, axis=alt.Axis(title="Recurring Revenue (in thousands)", format=',.0f', domain=True, domainColor='black', domainWidth=1, ticks=True, tickWidth=1, tickSize=8)),
         y2='preRev:Q'
     )
 
