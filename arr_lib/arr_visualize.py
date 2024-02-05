@@ -29,6 +29,7 @@ def get_list_of_months(df, descending):
 
     return month_columns,last_month
 
+@st.cache_data
 def get_core_arr_metrics (df_agg, df_logo, selected_month): 
     """
     Calculate the following metrics 
@@ -110,7 +111,7 @@ def get_core_arr_metrics (df_agg, df_logo, selected_month):
 
     return arr, arr_growth, logo_cnt, logo_growth, churn_cnt, churn_growth, nr, gr 
 
-
+@st.cache_data
 def prepare_waterfall_data(input_df, date_selector):
 
     df = input_df.copy()
@@ -177,7 +178,7 @@ def prepare_waterfall_data(input_df, date_selector):
 
     return df
  
-
+@st.cache_data
 def pivot_arr_df(input_df):
 
     df = input_df.copy()
@@ -212,6 +213,7 @@ def pivot_arr_df(input_df):
 
     return pivoted_agg_df
 
+@st.cache_data
 def get_last_n_period_data(input_df, given_date=None): 
 
     df = input_df
@@ -228,6 +230,7 @@ def get_last_n_period_data(input_df, given_date=None):
 
     return df.tail(13)
 
+@st.cache_data
 def chart_width(key):
     dimension_data = st_dimensions(key=key)
 
