@@ -10,7 +10,7 @@ from arr_lib import styling as style
 
 
 
-
+@st.cache_data
 def arr_walk_chart(metrics_df, bar_color, chart_title): 
     """
     generate and return an altair chart - for customer ARR walk 
@@ -83,7 +83,7 @@ def arr_walk_chart(metrics_df, bar_color, chart_title):
     return arr_walk_chart
 
 
-
+@st.cache_data
 def cust_count_chart(df, chart_color, chart_title): 
        
     # Check if 'Total_Sales' column exists, and drop it if it does
@@ -118,7 +118,7 @@ def cust_count_chart(df, chart_color, chart_title):
 
     return cust_count_result
 
-
+@st.cache_data
 def cust_count_waterfall_chart(df,  chart_title): 
 
      
@@ -180,7 +180,7 @@ def cust_count_waterfall_chart(df,  chart_title):
     
     return count_wf_chart
 
-
+@st.cache_data
 def top_cust_chart(customer_arr_df, bar_color, chart_title): 
     """
     generate and return an altair chart - for customer pareto 
@@ -243,7 +243,7 @@ def top_cust_chart(customer_arr_df, bar_color, chart_title):
     return top_final_chart
 
 
-
+@st.cache_data
 def cust_arr_waterfall_chart(df,  chart_title): 
 
      
