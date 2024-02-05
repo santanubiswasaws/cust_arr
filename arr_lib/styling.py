@@ -64,3 +64,18 @@ DF_HIGHLIGHT_BG_COLOR_CURR_PERIOD = '#e0f5e0'
 
 DF_LIGHT_BLUE_BG =  "#ccefff"
 DF_LIGHTER_BLUE_BG = "#e5f9ff"
+
+
+
+preRev_color = '#cce0df'
+newBusiness_color = '#54c69b'
+upSell_color = '#75dce6'
+downSell_color = '#f5ad76'
+churn_color = '#fa5555'   # '#ee7777'
+curRev_color = '#cbdeb8'
+beginPeriod_color = '#cce0df'
+endPeriod_color = '#e3f0b1'
+
+
+
+
