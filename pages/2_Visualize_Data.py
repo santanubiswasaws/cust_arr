@@ -350,3 +350,26 @@ with arr_wf_tab2:
         df2 = av.prepare_waterfall_data(metrics_df, date_selector_2)
         agg_arr_wf_chart = ac.create_waterfall_chart(df2, chart_width)
         st.altair_chart(agg_arr_wf_chart, theme="streamlit", use_container_width=False)
+
+
+#
+# Top customer analysis 
+#
+
+st.subheader('Top Customers')
+top_cust_tab1, top_cust_tab2= st.tabs(["Adjusted Values", "Uploaded Values"])
+
+
+with top_cust_tab1:
+    st.markdown("<br>", unsafe_allow_html=True)
+
+    top_final_chart = ac.top_cust_chart(replan_customer_arr_df, '#99c999', 'Top Customers - Adjusted' )
+    st.altair_chart(top_final_chart, theme="streamlit", use_container_width=False)
+
+with top_cust_tab2:
+    st.markdown("<br>", unsafe_allow_html=True)
+
+    top_final_chart1 = ac.top_cust_chart(customer_arr_df, '#77aaca', 'Top Customers - Uploaded' )
+    st.altair_chart(top_final_chart1, theme="streamlit", use_container_width=False)
+
+st.markdown("<br>", unsafe_allow_html=True)
