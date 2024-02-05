@@ -315,7 +315,7 @@ def cust_arr_waterfall_chart(df,  chart_title):
 
 
 
-
+@st.cache_data
 def create_waterfall_chart(input_df, chart_width):
     """
     
