@@ -53,7 +53,7 @@ if (metrics_df.empty or replan_metrics_df.empty):
 
 #chart_width = av.chart_width('main')
 
-chart_width = 1150
+chart_width = 1100
 
 ##
 ## Metrics card for last year 
