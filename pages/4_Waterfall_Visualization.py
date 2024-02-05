@@ -56,6 +56,136 @@ if (metrics_df.empty or replan_metrics_df.empty):
 chart_width = 1100
 
 
+##
+## Metrics card for last year 
+## 1. ARR Growth, 2. New Customers, 3. NRR, 4. GRR
+##
+
+st.subheader('Core Metrics')
+
+card_tab1, card_tab2= st.tabs(["Adjusted ARR", "Uploaded ARR"])
+
+with card_tab1:  # Adjusted metrics 
+    st.markdown("<br>", unsafe_allow_html=True)
+
+    ##
+    ## Prep data for metrics card
+    ##
+
+    # arr metrics 
+    rp_df = replan_metrics_df.copy()
+    rp_logo_df = replan_logo_metrics_df.copy()
+
+    month_columns, default_month = av.get_list_of_months(rp_df, True)
+
+    # Set selected_month to default_month initially
+    selected_month = default_month
+
+    # Dropdown to select the month with default set to last_month
+    selected_month = st.selectbox("Select a Month", month_columns, index=month_columns.index(selected_month), key="arr_month_select_1" )
+      
+    rp_arr, rp_arr_growth, rp_logo_cnt, rp_logo_growth, rp_logo_churn, rp_logo_churn_rate, rp_nr, rp_gr = av.get_core_arr_metrics(rp_df, rp_logo_df, selected_month)
+    
+    #
+    # Print the metrics cards 
+    #
+    st.markdown("<br>", unsafe_allow_html=True)
+
+    card_col1, card_col2, card_col3, card_col4, card_col5, card_col6 = st.columns([3,3,3,3,3,1])
+
+    with card_col1: 
+        # ARR and growth
+        st.metric(label="ARR (in thousands)", value=rp_arr, delta=rp_arr_growth)
+
+    with card_col2: 
+        # New Logo 
+        st.metric(label="New Logo in last 12 months", value=rp_logo_cnt, delta=rp_logo_growth)
+
+    with card_col3: 
+        # Churn
+        st.metric(label="Churned Logo in last 12 months", value=rp_logo_churn, delta=rp_logo_churn_rate, delta_color="inverse")
+
+    with card_col4: 
+        # Net retention
+        st.metric(label="Net Retention (NRR))", value=rp_nr, delta=None)
+
+    with card_col5: 
+        # Gross retention 
+        st.metric(label="Gross Retention (GRR))", value=rp_gr, delta=None)
+
+
+with card_tab2:
+
+    st.markdown("<br>", unsafe_allow_html=True)
+
+    ##
+    ## Prep data for metrics card
+    ##
+
+    # arr metrics 
+    met_df = metrics_df.copy()
+
+    # Melting the DataFrame
+    met_df = met_df.melt(id_vars='measureType', var_name='month', value_name='value')
+
+
+        # arr metrics 
+    met_df = metrics_df.copy()
+    logo_df = logo_metrics_df.copy()
+
+    month_columns_2, default_month_2 = av.get_list_of_months(met_df, True)
+
+    # Set selected_month to default_month initially
+    selected_month_2 = default_month_2
+
+    # Dropdown to select the month with default set to last_month
+    selected_month_2 = st.selectbox("Select a Month", month_columns_2, index=month_columns.index(selected_month_2), key="arr_month_select_2" )
+      
+    arr, arr_growth, logo_cnt, logo_growth, logo_churn, logo_churn_rate, nr, gr = av.get_core_arr_metrics(met_df, logo_df, selected_month_2)
+    
+    st.markdown("<br>", unsafe_allow_html=True)
+
+    card_col1a, card_col2a, card_col3a, card_col4a, card_col5a, card_col6a = st.columns([3,3,3,3,3,1])
+
+    with card_col1a: 
+        # ARR and growth
+        st.metric(label="ARR (in thousands)", value=arr, delta=arr_growth)
+
+    with card_col2a: 
+        # New Logo 
+        st.metric(label="New Logo in last 12 months", value=logo_cnt, delta=logo_growth)
+
+    with card_col3a: 
+        st.metric(label="Churned Logo in last 12 months)", value=logo_churn, delta=logo_churn_rate, delta_color="inverse")
+
+    with card_col4a: 
+        st.metric(label="Net Retention (NRR))", value=nr, delta=None)
+
+    with card_col5a: 
+        # Gross retention 
+        st.metric(label="Gross Retention (NRR))", value=gr, delta=None)
+
+
+# Metrics card styling elements 
+        
+    # background_color: str = "#FFF",
+    # border_size_px: int = 1,
+    # border_color: str = "#CCC",
+    # border_radius_px: int = 5,
+    # border_left_color: str = "#9AD8E1",
+    # box_shadow: bool = True,
+
+style_metric_cards(
+        background_color = "#F2F5F5",
+        border_color = "#CCC",
+        border_left_color = "#E0E0E0",    
+        box_shadow = False)
+
+
+st.markdown("<br>", unsafe_allow_html=True)
+
+
+
 ## ARR waterfall chart 
 st.markdown("<br>", unsafe_allow_html=True)
 st.subheader('ARR Waterfall Analysis ')
