@@ -21,7 +21,7 @@ from dotenv import load_dotenv
 import os
 
 
-st.header("Visualize ARR Data")
+st.header("Visualize ARR Waterfall")
 st.markdown("<br>", unsafe_allow_html=True)
 
 load_dotenv()
