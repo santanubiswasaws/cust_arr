@@ -373,3 +373,23 @@ with top_cust_tab2:
     st.altair_chart(top_final_chart1, theme="streamlit", use_container_width=False)
 
 st.markdown("<br>", unsafe_allow_html=True)
+
+
+#
+# ARR Analytics 
+#
+st.subheader('ARR Trends')
+arr_tab1, arr_tab2= st.tabs(["Final Adjusted ARR", "Uploaded ARR"])
+with arr_tab1: 
+
+    st.markdown("<br>", unsafe_allow_html=True)
+    arr_result = ac.arr_walk_chart(replan_metrics_df, '#88b988', 'Final Adjusted ARR')
+    st.altair_chart(arr_result, theme="streamlit", use_container_width=False)
+
+with arr_tab2: 
+
+    st.markdown("<br>", unsafe_allow_html=True)
+    upld_arr_result = ac.arr_walk_chart(metrics_df, '#77aaca', 'Uploaded ARR')
+    st.altair_chart(upld_arr_result, theme="streamlit", use_container_width=False)
+
+st.markdown("<br>", unsafe_allow_html=True)
