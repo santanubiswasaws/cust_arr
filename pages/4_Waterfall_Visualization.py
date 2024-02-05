@@ -246,29 +246,27 @@ st.markdown("<br>", unsafe_allow_html=True)
 # st.markdown("<br>", unsafe_allow_html=True)
 
 
-##
-## Top customer analysis 
-##
-    
-# Check if 'Total_Sales' column exists, and drop it if it does
+#
+# Top customer analysis 
+#
 
-# st.subheader('Top Customers')
-# top_cust_tab1, top_cust_tab2= st.tabs(["Adjusted Values", "Uploaded Values"])
+st.subheader('Top Customers')
+top_cust_tab1, top_cust_tab2= st.tabs(["Adjusted Values", "Uploaded Values"])
 
 
-# with top_cust_tab1:
-#     st.markdown("<br>", unsafe_allow_html=True)
+with top_cust_tab1:
+    st.markdown("<br>", unsafe_allow_html=True)
 
-#     top_final_chart = ac.top_cust_chart(replan_customer_arr_df, '#99c999', 'Top Customers - Adjusted' )
-#     st.altair_chart(top_final_chart, theme="streamlit", use_container_width=False)
+    top_final_chart = ac.top_cust_chart(replan_customer_arr_df, '#99c999', 'Top Customers - Adjusted' )
+    st.altair_chart(top_final_chart, theme="streamlit", use_container_width=False)
 
-# with top_cust_tab2:
-#     st.markdown("<br>", unsafe_allow_html=True)
+with top_cust_tab2:
+    st.markdown("<br>", unsafe_allow_html=True)
 
-#     top_final_chart1 = ac.top_cust_chart(customer_arr_df, '#77aaca', 'Top Customers - Uploaded' )
-#     st.altair_chart(top_final_chart1, theme="streamlit", use_container_width=False)
+    top_final_chart1 = ac.top_cust_chart(customer_arr_df, '#77aaca', 'Top Customers - Uploaded' )
+    st.altair_chart(top_final_chart1, theme="streamlit", use_container_width=False)
 
-# st.markdown("<br>", unsafe_allow_html=True)
+st.markdown("<br>", unsafe_allow_html=True)
 
 
 
