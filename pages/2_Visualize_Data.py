@@ -393,3 +393,41 @@ with arr_tab2:
     st.altair_chart(upld_arr_result, theme="streamlit", use_container_width=False)
 
 st.markdown("<br>", unsafe_allow_html=True)
+
+# ##
+# ## Countmer count analytics 
+# ##
+
+st.subheader('Customer Counts')
+cust_cout_tab1, cust_cout_tab2= st.tabs(["Final Customer Count", "Uploaded Coustomer Count"])
+
+with cust_cout_tab1: 
+
+    st.markdown("<br>", unsafe_allow_html=True)
+
+    # customer count 
+    replan_cust_count_result = ac.cust_count_chart(replan_logo_metrics_df, '#88b988', 'Adjusted Customer Count' )
+    st.altair_chart(replan_cust_count_result, theme="streamlit", use_container_width=False)
+
+    st.markdown("<br>", unsafe_allow_html=True)
+
+    # customer count waterfall
+    replan_cust_count_wf_result = ac.cust_count_waterfall_chart (replan_logo_metrics_df, 'Adjusted Customer Count Waterfall' )
+    st.altair_chart(replan_cust_count_wf_result, theme="streamlit", use_container_width=False)
+
+
+with cust_cout_tab2: 
+
+    st.markdown("<br>", unsafe_allow_html=True)
+
+    # customer count 
+    replan_cust_count_result = ac.cust_count_chart(logo_metrics_df, '#77aaca', 'Uploaded Customer Count' )
+    st.altair_chart(replan_cust_count_result, theme="streamlit", use_container_width=False)
+
+    st.markdown("<br>", unsafe_allow_html=True)
+
+    # Customer count waterfall 
+    cust_count_wf_result = ac.cust_count_waterfall_chart (logo_metrics_df, 'Customer Count Waterfall' )
+    st.altair_chart(cust_count_wf_result, theme="streamlit", use_container_width=False)
+
+st.markdown("<br>", unsafe_allow_html=True)
