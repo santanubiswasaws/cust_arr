@@ -51,7 +51,9 @@ if (metrics_df.empty or replan_metrics_df.empty):
     st.error('Please generate ARR metrics')
     st.stop()
 
-chart_width = av.chart_width('main')
+#chart_width = av.chart_width('main')
+
+chart_width = 1150
 
 ##
 ## Metrics card for last year 
