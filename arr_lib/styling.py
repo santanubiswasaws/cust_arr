@@ -68,14 +68,12 @@ DF_LIGHTER_BLUE_BG = "#e5f9ff"
 
 
 preRev_color = '#cce0df'
-newBusiness_color = '#54c69b'
-upSell_color = '#75dce6'
+newBusiness_color = '#99c999'   # '#99c999'  '#54c69b'
+upSell_color = '#77aaca'    #     '#77aaca'   '#75dce6' 
 downSell_color = '#f5ad76'
-churn_color = '#fa5555'   # '#ee7777'
+churn_color = '#ee7777'    # '#ee7777'  '#fa5555' 
 curRev_color = '#cbdeb8'
 beginPeriod_color = '#cce0df'
 endPeriod_color = '#e3f0b1'
-
-
 
 

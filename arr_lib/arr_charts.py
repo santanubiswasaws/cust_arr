@@ -307,7 +307,7 @@ def cust_arr_waterfall_chart(df,  chart_title):
         color='gray'
     ).configure_axis(
         gridColor='#e0e0e0'  # Set grid line color
-    )
+    )   
     
     return arr_wf_chart
 
