@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 from datetime import datetime
 import streamlit as st
 from arr_lib.setup import ARR_DISPLAY_COLUMN_MAP
@@ -82,8 +83,8 @@ def create_arr_metrics(input_df):
     - pd.DataFrame: Gives the over all metrics for each month, agrregatd for all customers - MRR, ARR, newBusiness, upSell, downSell, churn 
     """
     df = input_df.copy()
-
     transposed_df = create_transposed_monthly_revenue_matrix(df)
+
     cust_arr_waterfall_df, customer_arr_df, logo_waterfall_df, metrics_df = create_customer_and_aggregated_metrics(transposed_df)
 
     return cust_arr_waterfall_df, customer_arr_df, logo_waterfall_df, metrics_df
@@ -141,6 +142,7 @@ def create_customer_and_aggregated_metrics(input_df):
     df = input_df.copy()
     df.insert(2, 'measureType', 'monthlyRevenue')
 
+
     # Identify 'newBusiness' rows based on the condition
     new_business_mask = (df.shift(axis=1, fill_value=0) == 0) & (df != 0)
 
@@ -151,11 +153,20 @@ def create_customer_and_aggregated_metrics(input_df):
     # Fill NaN values with 0
     new_business_df = new_business_df.fillna(0)
 
-    # Retrieve the 'customerId' values for 'upSell' rows
+    # Retrieve the 'customerId' values for 'newBusiness' rows
     new_business_df['customerId'] = df.loc[new_business_mask.index, 'customerId'].values
-    # Retrieve the 'customerName' values for 'upSell' rows
+    # Retrieve the 'customerName' values for 'newBusiness' rows
     new_business_df['customerName'] = df.loc[new_business_mask.index, 'customerName'].values
 
+
+    # for the very first month - set the current revnue as newBusiness
+
+    # Determine the name of the 4th column dynamically if needed
+    fourth_column_name = df.columns[3]  # Adjust the index as necessary
+    # Create a mapping from customerId to the 4th column value in df
+    value_map = df.set_index('customerId')[fourth_column_name]
+    # Apply this mapping to the 'new_business_df' 4th column using the customerId as the key
+    new_business_df[fourth_column_name] = new_business_df['customerId'].map(value_map)
 
 
     # Identify 'upSell' rows based on the condition for all month columns
@@ -197,19 +208,21 @@ def create_customer_and_aggregated_metrics(input_df):
 
     # Append 'upSell', 'downSell', and 'churn' rows to the original DataFrame
     df = pd.concat([df, up_sell_df, down_sell_df, churn_df], ignore_index=True)
-
+    
     # Append 'newBusiness' rows to the original DataFrame
     df = pd.concat([df, new_business_df], ignore_index=True)
+
 
     # Fill NaN values with 0
     df = df.fillna(0)
 
     # Define the sorting order for 'measureType'
-    sorting_order = ['monthlyRevenue', 'newBusiness', 'upSell', 'downSell', 'churn']
+    sorting_order = ['monthlyRevenue', 'newBusiness', 'newBusiness1', 'upSell', 'downSell', 'churn']
 
     # Sort the DataFrame based on 'measureType' using the defined order and 'customerId'
     df['measureType'] = pd.Categorical(df['measureType'], categories=sorting_order, ordered=True)
     df = df.sort_values(['customerName','customerId', 'measureType'])
+
 
 
     # dataframe with all measuretypes for a customer 
@@ -434,6 +447,10 @@ def create_waterfall(input_df):
     # Shift the columns of the original df - by one colmn- and add it  to waterfall df - so that it now captures last month's revenue
     waterfall_df.iloc[0, 2:] = df.iloc[0, 1:-1].values
 
+
+    # Set the first revenue column to 0 for all rows - assume the very first month's opening revenue is 0, starting with new business
+    waterfall_df.iloc[:, 1] = 0  
+    
     waterfall_df['measureType'] = waterfall_df['measureType'].cat.add_categories(['lastMonthRevenue'])
 
     # rename the row measureType 
@@ -763,7 +780,7 @@ def decorate_logo_metrics_df(input_df, theme):
 
     df = input_df.copy()
 
-    if theme is 'green':
+    if theme == 'green':
         neg_bg = DF_NEGATIVE_HIGHLIGHT_BG_COLOR
         curr_period_bg = DF_HIGHLIGHT_BG_COLOR_CURR_PERIOD
         prev_period_bg = DF_HIGHLIGHT_BG_COLOR_PREV_PERIOD
