@@ -165,6 +165,7 @@ def create_customer_and_aggregated_metrics(input_df):
     fourth_column_name = df.columns[3]  # Adjust the index as necessary
     # Create a mapping from customerId to the 4th column value in df
     value_map = df.set_index('customerId')[fourth_column_name]
+
     # Apply this mapping to the 'new_business_df' 4th column using the customerId as the key
     new_business_df[fourth_column_name] = new_business_df['customerId'].map(value_map)
 
