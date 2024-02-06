@@ -52,6 +52,29 @@ if (metrics_df.empty or replan_metrics_df.empty):
 
 chart_width = 1111
 
+# ARR waterfall chart 
+st.markdown("<br>", unsafe_allow_html=True)
+st.subheader('ARR Waterfall Analysis ')
+arr_wf_tab1, arr_wf_tab2= st.tabs(["Adjusted Values", "Uploaded Values"])
+with arr_wf_tab1:
+    st.markdown("<br>", unsafe_allow_html=True)
+    date_selector_1 = st.date_input('Select end date for Waterfall analysis ', key="wf_dt_1")
+    with st.spinner("Generating ARR Waterfall ..."):
+        df1 = av.prepare_waterfall_data(replan_metrics_df, date_selector_1)
+        agg_arr_wf_chart_replan = ac.create_waterfall_chart(df1, chart_width)
+        st.altair_chart(agg_arr_wf_chart_replan, theme="streamlit", use_container_width=False)
+
+        # st.dataframe(df1, use_container_width=True)
+
+with arr_wf_tab2: 
+    st.markdown("<br>", unsafe_allow_html=True)
+    date_selector_2 = st.date_input('Select end date for Waterfall analysis ', key="wf_dt_2")
+    with st.spinner("Generating ARR Waterfall ..."):
+        df2 = av.prepare_waterfall_data(metrics_df, date_selector_2)
+        agg_arr_wf_chart = ac.create_waterfall_chart(df2, chart_width)
+        st.altair_chart(agg_arr_wf_chart, theme="streamlit", use_container_width=False)
+
+
 ##
 ## Metrics card for last year 
 ## 1. ARR Growth, 2. New Customers, 3. NRR, 4. GRR
@@ -180,91 +203,7 @@ style_metric_cards(
 
 
 st.markdown("<br>", unsafe_allow_html=True)
-# ##
-# ## ARR Analytics 
-# ##
-# st.subheader('ARR Trends')
-# arr_tab1, arr_tab2= st.tabs(["Final Adjusted ARR", "Uploaded ARR"])
-# with arr_tab1: 
 
-#     st.markdown("<br>", unsafe_allow_html=True)
-#     arr_result = ac.arr_walk_chart(replan_metrics_df, '#88b988', 'Final Adjusted ARR')
-#     st.altair_chart(arr_result, theme="streamlit", use_container_width=False)
-
-# with arr_tab2: 
-
-#     st.markdown("<br>", unsafe_allow_html=True)
-#     upld_arr_result = ac.arr_walk_chart(metrics_df, '#77aaca', 'Uploaded ARR')
-#     st.altair_chart(upld_arr_result, theme="streamlit", use_container_width=False)
-
-# st.markdown("<br>", unsafe_allow_html=True)
-
-
-# ##
-# ## Countmer count analytics 
-# ##
-    
-# # Check if 'Total_Sales' column exists, and drop it if it does
-# # if 'Total_Sales' in replan_logo_metrics_df.columns:
-# #     replan_logo_metrics_df = replan_logo_metrics_df.drop(columns=['Total_Sales'])
-
-# st.subheader('Customer Counts')
-# cust_cout_tab1, cust_cout_tab2= st.tabs(["Final Customer Count", "Uploaded Coustomer Count"])
-
-# with cust_cout_tab1: 
-
-#     st.markdown("<br>", unsafe_allow_html=True)
-
-#     # customer count 
-#     replan_cust_count_result = ac.cust_count_chart(replan_logo_metrics_df, '#88b988', 'Adjusted Customer Count' )
-#     st.altair_chart(replan_cust_count_result, theme="streamlit", use_container_width=False)
-
-#     st.markdown("<br>", unsafe_allow_html=True)
-
-#     # customer count waterfall
-#     replan_cust_count_wf_result = ac.cust_count_waterfall_chart (replan_logo_metrics_df, 'Adjusted Customer Count Waterfall' )
-#     st.altair_chart(replan_cust_count_wf_result, theme="streamlit", use_container_width=False)
-
-
-# with cust_cout_tab2: 
-
-#     st.markdown("<br>", unsafe_allow_html=True)
-
-#     # customer count 
-#     replan_cust_count_result = ac.cust_count_chart(logo_metrics_df, '#77aaca', 'Uploaded Customer Count' )
-#     st.altair_chart(replan_cust_count_result, theme="streamlit", use_container_width=False)
-
-#     st.markdown("<br>", unsafe_allow_html=True)
-
-#     # Customer count waterfall 
-#     cust_count_wf_result = ac.cust_count_waterfall_chart (logo_metrics_df, 'Customer Count Waterfall' )
-#     st.altair_chart(cust_count_wf_result, theme="streamlit", use_container_width=False)
-
-# st.markdown("<br>", unsafe_allow_html=True)
-
-# ##
-# ## Top customer analysis 
-# ##
-    
-# # Check if 'Total_Sales' column exists, and drop it if it does
-
-# st.subheader('Top Customers')
-# top_cust_tab1, top_cust_tab2= st.tabs(["Adjusted Values", "Uploaded Values"])
-
-
-# with top_cust_tab1:
-#     st.markdown("<br>", unsafe_allow_html=True)
-
-#     top_final_chart = ac.top_cust_chart(replan_customer_arr_df, '#99c999', 'Top Customers - Adjusted' )
-#     st.altair_chart(top_final_chart, theme="streamlit", use_container_width=False)
-
-# with top_cust_tab2:
-#     st.markdown("<br>", unsafe_allow_html=True)
-
-#     top_final_chart1 = ac.top_cust_chart(customer_arr_df, '#77aaca', 'Top Customers - Uploaded' )
-#     st.altair_chart(top_final_chart1, theme="streamlit", use_container_width=False)
-
-# st.markdown("<br>", unsafe_allow_html=True)
 
 # ##
 # ## Customer MRR Analysis 
@@ -329,27 +268,7 @@ st.markdown("<br>", unsafe_allow_html=True)
 # st.markdown(GLOBAL_STYLING, unsafe_allow_html=True)
 
 
-# ARR waterfall chart 
-st.markdown("<br>", unsafe_allow_html=True)
-st.subheader('ARR Waterfall Analysis ')
-arr_wf_tab1, arr_wf_tab2= st.tabs(["Adjusted Values", "Uploaded Values"])
-with arr_wf_tab1:
-    st.markdown("<br>", unsafe_allow_html=True)
-    date_selector_1 = st.date_input('Select end date for Waterfall analysis ', key="wf_dt_1")
-    with st.spinner("Generating ARR Waterfall ..."):
-        df1 = av.prepare_waterfall_data(replan_metrics_df, date_selector_1)
-        agg_arr_wf_chart_replan = ac.create_waterfall_chart(df1, chart_width)
-        st.altair_chart(agg_arr_wf_chart_replan, theme="streamlit", use_container_width=False)
 
-        # st.dataframe(df1, use_container_width=True)
-
-with arr_wf_tab2: 
-    st.markdown("<br>", unsafe_allow_html=True)
-    date_selector_2 = st.date_input('Select end date for Waterfall analysis ', key="wf_dt_2")
-    with st.spinner("Generating ARR Waterfall ..."):
-        df2 = av.prepare_waterfall_data(metrics_df, date_selector_2)
-        agg_arr_wf_chart = ac.create_waterfall_chart(df2, chart_width)
-        st.altair_chart(agg_arr_wf_chart, theme="streamlit", use_container_width=False)
 
 
 #
