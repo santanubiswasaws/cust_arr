@@ -217,13 +217,11 @@ def create_customer_and_aggregated_metrics(input_df):
     df = df.fillna(0)
 
     # Define the sorting order for 'measureType'
-    sorting_order = ['monthlyRevenue', 'newBusiness', 'newBusiness1', 'upSell', 'downSell', 'churn']
+    sorting_order = ['monthlyRevenue', 'newBusiness', 'upSell', 'downSell', 'churn']
 
     # Sort the DataFrame based on 'measureType' using the defined order and 'customerId'
     df['measureType'] = pd.Categorical(df['measureType'], categories=sorting_order, ordered=True)
     df = df.sort_values(['customerName','customerId', 'measureType'])
-
-
 
     # dataframe with all measuretypes for a customer 
     df_cust_arr_waterfall = df
