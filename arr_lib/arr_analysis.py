@@ -177,13 +177,16 @@ def create_customer_and_aggregated_metrics(input_df):
     up_sell_df['measureType'] = 'upSell'
 
     # Mask to make 'upSell' rows zero when the previous month's 'monthlyRevenue' is 0 for all month columns
-    zero_month_mask = (df_numeric.iloc[:, :-1] == 0)
-    up_sell_df[zero_month_mask] = 0
+    # zero_month_mask = (df_numeric.iloc[:, :-1] == 0)
+    #up_sell_df[zero_month_mask] = 0
+
+    # up_sell_df = up_sell_df.fillna(0)
 
     # Retrieve the 'customerId' values for 'upSell' rows
     up_sell_df['customerId'] = df.loc[up_sell_mask.index, 'customerId'].values
     # Retrieve the 'customerName' values for 'upSell' rows
     up_sell_df['customerName'] = df.loc[up_sell_mask.index, 'customerName'].values
+
 
     # Identify 'downSell' rows based on the condition for all month columns
     down_sell_mask = (df_numeric.diff(axis=1) < 0) & (df_numeric.shift(axis=1) != 0) & (df_numeric !=0 )
@@ -755,7 +758,8 @@ def decorate_agg_metrics(input_df, theme):
             return [''] * len(row)
 
     # Apply styling to each cell
-    styled_df = df.style.apply(lambda x: x.map(style_cell), axis=None)
+    # styled_df = df.style.apply(lambda x: x.map(style_cell), axis=None)
+    styled_df = df.style.applymap(style_cell)
 
     # Apply styling to each row
     styled_df = styled_df.apply(style_row, axis=1)
@@ -817,7 +821,8 @@ def decorate_logo_metrics_df(input_df, theme):
             return [''] * len(row)
 
     # Apply styling to each cell
-    styled_df = df.style.apply(lambda x: x.map(style_cell), axis=None)
+    # styled_df = df.style.apply(lambda x: x.map(style_cell), axis=None)
+    styled_df = df.style.applymap(style_cell)
 
     # Apply styling to each row
     styled_df = styled_df.apply(style_row, axis=1)

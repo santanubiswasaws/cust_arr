@@ -90,6 +90,12 @@ Answer: customer_arr_df
 Question: "what is the total churn for Customer D in Q4 of 2025?"
 Answer: customer_arr_df
 
+Question: "list top 10 customers"
+Answer: customer_arr_df
+
+Question: "print id, name and revenue of top 10 customers"
+Answer: customer_arr_df
+
 """
 
 customer_name_extract_prompt = """

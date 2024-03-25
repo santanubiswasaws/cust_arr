@@ -15,7 +15,7 @@ from arr_lib.styling import MARKDOWN_STYLES
 from arr_lib.styling import GLOBAL_STYLING
 
 from arr_lib.print_logos import print_logos
-from streamlit_extras.app_logo import add_logo
+# from streamlit_extras.app_logo import add_logo
 
 from dotenv import load_dotenv
 import os

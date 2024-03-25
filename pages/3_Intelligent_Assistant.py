@@ -4,7 +4,7 @@ import altair as alt
 from datetime import datetime
 
 from arr_lib.print_logos import print_logos
-from streamlit_extras.app_logo import add_logo
+# from streamlit_extras.app_logo import add_logo
 
 #from langchain.llms import OpenAI
 from openai import OpenAI 
@@ -17,6 +17,13 @@ import os
 from langchain.agents.agent_types import AgentType
 from langchain_experimental.agents.agent_toolkits import create_pandas_dataframe_agent
 from langchain_openai import ChatOpenAI
+
+
+from pandasai import SmartDataframe
+import pandasai.llm as poa
+
+
+llm_model="gpt-3.5-turbo-0613"
 
 from arr_lib.styling import BUTTON_STYLE
 from arr_lib.styling import MARKDOWN_STYLES
@@ -45,6 +52,8 @@ else:
     print("OPENAI_API_KEY is set")
 
 client = OpenAI()
+
+llm = poa.OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 if 'metrics_df' not in st.session_state: 
     metrics_df = pd.DataFrame()
@@ -202,9 +211,46 @@ def process_query(user_query):
         # Fuzzy match customer name
 
         response = ""
+
+
+        if df_to_query == 'metrics_df':
+            with st.spinner("Finding answer in aggregated metrics .."):
+                try:
+                    ai_agg_df = SmartDataframe(pivoted_agg_df, config={"llm": llm})
+                    response = ai_agg_df.chat(user_query)
+
+                except Exception as e:
+                    print(f"An error occurred in calc AI engine: {e}")
+                    response = "Sorry - I am unable to answer that query."
+        else: 
+            with st.spinner("Finding answer in customer metrics .."):
+                updated_query = ah.preprocess_query(user_query, unique_customers_dict, client)
+                try:
+                    ai_cust_df = SmartDataframe(pivoted_cust_df, config={"llm": llm})
+                    response = ai_cust_df.chat(updated_query)
+                except Exception as e:
+                    print(f"An error occurred in calc AI engine: {e}")
+                    response = "Sorry - I am unable to answer that query."
+
+
+        st.session_state.show_last_only = True
+
+        # Insert query and response at the beginning of conversation history
+        st.session_state.conversation_history.insert(0, ("Response:", response))
+        st.session_state.conversation_history.insert(0, ("Query:", user_query))
+
+
+def process_query2(user_query):
+    if user_query:
+        # Classify the query to the appropriate dataframe
+        df_to_query = classify_question(user_query, few_shot_prompt)
+
+        # Fuzzy match customer name
+
+        response = ""
         if df_to_query == 'customer_arr_df':
             with st.spinner("Finding answer in customer metrics .."):
-                updated_query = ah. preprocess_query(user_query, unique_customers_dict, client)
+                updated_query = ah.preprocess_query(user_query, unique_customers_dict, client)
                 try:
                     cust_agent = crate_df_agent(pivoted_cust_df, llm_model)
                     response = cust_agent.run(updated_query)
@@ -228,6 +274,9 @@ def process_query(user_query):
         # Insert query and response at the beginning of conversation history
         st.session_state.conversation_history.insert(0, ("Response:", response))
         st.session_state.conversation_history.insert(0, ("Query:", user_query))
+
+
+
 
 with st.expander("Show/Hide Customer MRR details"): 
     st.markdown("<br>", unsafe_allow_html=True)
@@ -273,7 +322,8 @@ with st.expander("Show/Hide Full Query History"):
         st.experimental_rerun()
     
     for message_type, message in st.session_state.conversation_history:
-        st.write(f"{message_type} {message}")
+        #st.write(f"{message_type} {message}")
+        st.write(message)
         if isinstance(message, pd.DataFrame):
             st.dataframe(message)
         # Check if the current item is an answer and not the last item in the list

@@ -6,7 +6,7 @@ from pandas.tseries.offsets import MonthEnd
 from datetime import datetime, timedelta
 
 from arr_lib.print_logos import print_logos
-from streamlit_extras.app_logo import add_logo
+# from streamlit_extras.app_logo import add_logo
 
 
 from arr_lib.styling import BUTTON_STYLE
